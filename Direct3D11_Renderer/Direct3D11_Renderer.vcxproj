@@ -93,15 +93,22 @@
     <None Include=".clang-tidy" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\MikastivException.cpp" />
-    <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="src\WinMain.cpp" />
+    <ClInclude Include="Helpers.hpp" />
+    <ClInclude Include="MikastivException.hpp" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="WinDefines.hpp" />
+    <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\include\Helpers.hpp" />
-    <ClInclude Include="src\include\MikastivException.hpp" />
-    <ClInclude Include="src\include\WinDefines.hpp" />
-    <ClInclude Include="src\include\Window.hpp" />
+    <ClCompile Include="MikastivException.cpp" />
+    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Direct3D11_Renderer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="dx11.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

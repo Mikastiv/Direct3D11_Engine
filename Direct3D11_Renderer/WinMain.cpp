@@ -1,6 +1,6 @@
-#include "include/WinDefines.hpp"
-#include "include/Window.hpp"
-#include "include/Helpers.hpp"
+#include "WinDefines.hpp"
+#include "Window.hpp"
+#include "Helpers.hpp"
 
 #include <locale.h>
 
