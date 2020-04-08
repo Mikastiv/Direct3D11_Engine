@@ -3,6 +3,7 @@
 #include "WinDefines.hpp"
 #include "MikastivException.hpp"
 #include "Keyboard.hpp"
+#include "Mouse.hpp"
 
 class Window
 {
@@ -55,6 +56,7 @@ private:
 
 public:
     Keyboard kbd{};
+    Mouse mouse{};
 
 private:
     static auto CALLBACK handle_msg_setup(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
