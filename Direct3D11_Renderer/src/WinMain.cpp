@@ -35,17 +35,12 @@ auto CALLBACK WinMain([[maybe_unused]] HINSTANCE hInstance,
     }
     catch (const MikastivException& e)
     {
-        std::string ex_what{ e.what() };
-        std::string ex_type{ e.get_type() };
-        MessageBox(nullptr,
-                   char_to_wstr(ex_what.data()).c_str(),
-                   char_to_wstr(ex_type.data()).c_str(),
-                   MB_OK | MB_ICONEXCLAMATION);
+        MessageBox(
+            nullptr, char_to_wstr(e.what()).c_str(), char_to_wstr(e.get_type()).c_str(), MB_OK | MB_ICONEXCLAMATION);
     }
     catch (const std::exception& e)
     {
-        std::string ex_what{ e.what() };
-        MessageBox(nullptr, char_to_wstr(ex_what.data()).c_str(), L"Standard Exception", MB_OK | MB_ICONEXCLAMATION);
+        MessageBox(nullptr, char_to_wstr(e.what()).c_str(), L"Standard Exception", MB_OK | MB_ICONEXCLAMATION);
     }
     catch (...)
     {
