@@ -28,7 +28,7 @@ auto CALLBACK WinMain([[maybe_unused]] HINSTANCE hInstance,
 
         if (msg_result == -1)
         {
-            return -1;
+            throw MK_WND_LAST_EXCEPT();
         }
 
         return (int)msg.wParam;

@@ -91,9 +91,9 @@ auto WINAPI Window::handle_msg_setup(HWND h_win, UINT msg, WPARAM w_param, LPARA
 
 auto WINAPI Window::handle_msg_thunk(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT
 {
-    // retrieve ptr to window class
+    // retrieve ptr to window instance
     Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(h_win, GWLP_USERDATA));
-    // forward message to window class handler
+    // forward message to window instance handler
     return pWnd->handle_msg(h_win, msg, w_param, l_param);
 }
 
@@ -133,7 +133,9 @@ auto Window::Exception::translate_error_code(HRESULT hr) noexcept -> std::string
         error_string += (char)c;
     }
 
+    // free windows buffer
     LocalFree(p_msg_buf);
+
     return error_string;
 }
 

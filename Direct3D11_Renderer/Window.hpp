@@ -69,3 +69,4 @@ public:
 };
 
 #define MK_WND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)
+#define MK_WND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError())
