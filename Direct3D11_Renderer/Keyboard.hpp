@@ -28,7 +28,7 @@ public:
         auto is_press() const noexcept -> bool;
         auto is_release() const noexcept -> bool;
         auto is_valid() const noexcept -> bool;
-        unsigned char get_code() const noexcept;
+        auto get_code() const noexcept -> unsigned char;
     };
 
 private:

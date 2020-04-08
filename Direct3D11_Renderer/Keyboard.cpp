@@ -27,7 +27,7 @@ auto Keyboard::Event::is_valid() const noexcept -> bool
     return type != Type::Invalid;
 }
 
-unsigned char Keyboard::Event::get_code() const noexcept
+auto Keyboard::Event::get_code() const noexcept -> unsigned char
 {
     return code;
 }
