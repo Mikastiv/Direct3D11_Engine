@@ -2,7 +2,7 @@
 #include "Window.hpp"
 #include "Helpers.hpp"
 
-#include <locale.h>
+#include <clocale>
 
 auto CALLBACK WinMain([[maybe_unused]] HINSTANCE hInstance,
                       [[maybe_unused]] HINSTANCE hPrevInstance,

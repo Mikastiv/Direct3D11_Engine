@@ -41,8 +41,8 @@ public:
 
     public:
         Exception(int line, const char* file, HRESULT hr) noexcept;
-        const char* what() const noexcept override;
-        virtual auto get_type() const noexcept -> const char*;
+        auto what() const noexcept -> const char* override;
+        auto get_type() const noexcept -> const char* override;
         auto get_error_code() const noexcept -> HRESULT;
         auto get_error_string() const noexcept -> std::string;
     };

@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-MikastivException::MikastivException(const int line, const char* file) noexcept
+MikastivException::MikastivException(int line, const char* file) noexcept
     : line(line)
     , file(file)
 {

@@ -13,8 +13,8 @@ protected:
     mutable std::string what_buffer{};
 
 public:
-    MikastivException(const int line, const char* file) noexcept;
-    const char* what() const noexcept override;
+    MikastivException(int line, const char* file) noexcept;
+    auto what() const noexcept -> const char* override;
     virtual auto get_type() const noexcept -> const char*;
     auto get_line() const noexcept -> int;
     auto get_file() const noexcept -> const std::string&;
