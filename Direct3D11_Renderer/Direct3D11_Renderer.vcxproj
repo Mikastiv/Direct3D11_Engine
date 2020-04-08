@@ -94,12 +94,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helpers.hpp" />
+    <ClInclude Include="Keyboard.hpp" />
     <ClInclude Include="MikastivException.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="WinDefines.hpp" />
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="MikastivException.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />

@@ -2,6 +2,7 @@
 
 #include "WinDefines.hpp"
 #include "MikastivException.hpp"
+#include "Keyboard.hpp"
 
 class Window
 {
@@ -52,6 +53,9 @@ private:
     int height{};
     HWND h_win{};
 
+public:
+    Keyboard kbd{};
+
 private:
     static auto CALLBACK handle_msg_setup(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
     static auto CALLBACK handle_msg_thunk(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
@@ -61,9 +65,9 @@ private:
 
 public:
     Window(int width, int height, const wchar_t* name) noexcept;
-    ~Window();
     Window(const Window&) = delete;
     Window(Window&&) = default;
+    ~Window();
     auto operator=(const Window&) -> Window& = delete;
     auto operator=(Window &&) -> Window& = default;
 };

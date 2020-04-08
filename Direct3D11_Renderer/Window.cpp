@@ -105,6 +105,31 @@ auto Window::handle_msg(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) no
     case WM_CLOSE:
         PostQuitMessage(0);
         return 0;
+    case WM_KILLFOCUS:
+        kbd.clear_keystates();
+        break;
+
+        // -------------------------------------------------------
+        //                  Keyboard messages
+        // -------------------------------------------------------
+    case WM_KEYDOWN:
+        [[fallthrough]];
+    case WM_SYSKEYDOWN:
+        // Autorepeat is bit 30 flag in l_param
+        if (!(l_param & (0b1 << 30)) || kbd.autorepeat_is_enabled())
+        {
+            kbd.on_key_press(static_cast<unsigned char>(w_param));
+        }
+        break;
+    case WM_KEYUP:
+        [[fallthrough]];
+    case WM_SYSKEYUP:
+        kbd.on_key_release(static_cast<unsigned char>(w_param));
+        break;
+    case WM_CHAR:
+        kbd.on_char(static_cast<unsigned char>(w_param));
+        break;
+        // -------------------------------------------------------
     }
 
     return DefWindowProc(h_win, msg, w_param, l_param);
