@@ -19,8 +19,8 @@ public:
         };
 
     private:
-        Type type;
-        unsigned char code;
+        Type type = Type::Invalid;
+        unsigned char code = 0u;
 
     public:
         Event() noexcept;
@@ -37,15 +37,14 @@ private:
 
 private:
     bool autorepeat_enabled = false;
-    std::bitset<n_keys> keystates;
-    std::queue<Event> keybuffer;
-    std::queue<unsigned char> charbuffer;
+    std::bitset<n_keys> keystates{};
+    std::queue<Event> keybuffer{};
+    std::queue<unsigned char> charbuffer{};
+
 
 private:
     template <typename T>
-    static auto trim_buffer(std::queue<T>& buffer) noexcept -> void;
-
-private:
+    auto trim_buffer(std::queue<T>& buffer) noexcept -> void;
     auto on_key_press(unsigned char keycode) noexcept -> void;
     auto on_key_release(unsigned char keycode) noexcept -> void;
     auto on_char(char character) noexcept -> void;

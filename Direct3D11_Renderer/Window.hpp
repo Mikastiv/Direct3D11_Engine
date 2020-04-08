@@ -35,7 +35,7 @@ public:
     class Exception : public MikastivException
     {
     private:
-        HRESULT hr;
+        HRESULT hr{};
 
     public:
         static auto translate_error_code(HRESULT hr) noexcept -> std::string;
@@ -49,8 +49,8 @@ public:
     };
 
 private:
-    int width{};
-    int height{};
+    int width = 0;
+    int height = 0;
     HWND h_win{};
 
 public:

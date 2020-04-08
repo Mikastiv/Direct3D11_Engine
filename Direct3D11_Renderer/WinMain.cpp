@@ -9,7 +9,7 @@ auto CALLBACK WinMain([[maybe_unused]] HINSTANCE hInstance,
                       [[maybe_unused]] LPSTR lpCmdLine,
                       [[maybe_unused]] int nShowCmd) -> int
 {
-    setlocale(LC_ALL, "en_US");
+    setlocale(LC_ALL, "en-US");
 
     constexpr int wnd_width = 800;
     constexpr int wnd_height = 600;

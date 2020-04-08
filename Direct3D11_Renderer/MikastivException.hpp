@@ -6,7 +6,7 @@
 class MikastivException : public std::exception
 {
 private:
-    int line{};
+    int line = 0;
     std::string file{};
 
 protected:

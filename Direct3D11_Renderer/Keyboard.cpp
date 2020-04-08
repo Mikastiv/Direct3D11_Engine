@@ -1,8 +1,7 @@
 #include "Keyboard.hpp"
+#include "Mouse.hpp"
 
 Keyboard::Event::Event() noexcept
-    : type(Type::Invalid)
-    , code(0u)
 {
 }
 
@@ -44,14 +43,14 @@ auto Keyboard::trim_buffer(std::queue<T>& buffer) noexcept -> void
 auto Keyboard::on_key_press(unsigned char keycode) noexcept -> void
 {
     keystates[keycode] = true;
-    keybuffer.push({ Event::Type::Press, keycode });
+    keybuffer.emplace(Event::Type::Press, keycode);
     trim_buffer(keybuffer);
 }
 
 auto Keyboard::on_key_release(unsigned char keycode) noexcept -> void
 {
     keystates[keycode] = false;
-    keybuffer.push({ Event::Type::Release, keycode });
+    keybuffer.emplace(Event::Type::Release, keycode);
     trim_buffer(keybuffer);
 }
 
