@@ -1,4 +1,5 @@
 #include "Window.hpp"
+#include "Helpers.hpp"
 #include "resource.h"
 
 #include <sstream>
@@ -126,12 +127,7 @@ auto Window::Exception::translate_error_code(HRESULT hr) noexcept -> std::string
         return "Unidentified error code";
     }
 
-    std::wstring tmp = p_msg_buf;
-    std::string error_string{};
-    for (const auto& c : tmp)
-    {
-        error_string += (char)c;
-    }
+    std::string error_string = wchar_to_str(p_msg_buf);
 
     // free windows buffer
     LocalFree(p_msg_buf);
