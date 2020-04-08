@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
+    <None Include=".clang-tidy" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\WinMain.cpp">
@@ -24,12 +25,21 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\MikastivException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\WinDefines.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\include\Window.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\MikastivException.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\Helpers.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

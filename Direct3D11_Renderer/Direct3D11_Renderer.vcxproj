@@ -90,12 +90,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include=".clang-format" />
+    <None Include=".clang-tidy" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\MikastivException.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\include\Helpers.hpp" />
+    <ClInclude Include="src\include\MikastivException.hpp" />
     <ClInclude Include="src\include\WinDefines.hpp" />
     <ClInclude Include="src\include\Window.hpp" />
   </ItemGroup>

@@ -1,5 +1,7 @@
 #include "include/Window.hpp"
 
+#include <sstream>
+
 Window::WindowClass Window::WindowClass::wnd_class;
 
 Window::WindowClass::WindowClass() noexcept
@@ -104,4 +106,65 @@ auto Window::handle_msg(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) no
     }
 
     return DefWindowProc(h_win, msg, w_param, l_param);
+}
+
+auto Window::Exception::translate_error_code(HRESULT hr) noexcept -> std::string
+{
+    wchar_t* p_msg_buf = nullptr;
+    DWORD msg_len =
+        FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                      nullptr,
+                      hr,
+                      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                      reinterpret_cast<LPWSTR>(&p_msg_buf),
+                      0,
+                      nullptr);
+
+    if (msg_len == 0)
+    {
+        return "Unidentified error code";
+    }
+
+    std::wstring tmp = p_msg_buf;
+    std::string error_string{};
+    for (const auto& c : tmp)
+    {
+        error_string += (char)c;
+    }
+
+    LocalFree(p_msg_buf);
+    return error_string;
+}
+
+Window::Exception::Exception(int line, const char* file, HRESULT hr) noexcept
+    : MikastivException(line, file)
+    , hr(hr)
+{
+}
+
+const char* Window::Exception::what() const noexcept
+{
+    std::ostringstream oss;
+    oss << get_type() << '\n'
+        << "[Error Code] " << get_error_code() << '\n'
+        << "[Description] " << get_error_string() << '\n'
+        << get_origin_string();
+
+    what_buffer = oss.str();
+    return what_buffer.c_str();
+}
+
+auto Window::Exception::get_type() const noexcept -> const char*
+{
+    return "Mikastiv Window Exception";
+}
+
+auto Window::Exception::get_error_code() const noexcept -> HRESULT
+{
+    return hr;
+}
+
+auto Window::Exception::get_error_string() const noexcept -> std::string
+{
+    return translate_error_code(hr);
 }
