@@ -1,6 +1,17 @@
 #include "Mouse.hpp"
+#include "WinDefines.hpp"
 
 Mouse::Event::Event() noexcept
+{
+}
+
+Mouse::Event::Event(Type type, const Mouse& parent) noexcept
+    : type(type)
+    , left_is_pressed(parent.left_is_pressed)
+    , right_is_pressed(parent.right_is_pressed)
+    , middle_is_pressed(parent.middle_is_pressed)
+    , x(parent.x)
+    , y(parent.y)
 {
 }
 
@@ -100,7 +111,21 @@ auto Mouse::on_mouse_move(int x, int y) noexcept -> void
 {
     this->x = x;
     this->y = y;
-    buffer.emplace(Event::Type::Move, x, y, *this);
+    buffer.emplace(Event::Type::Move, *this);
+    trim_buffer();
+}
+
+auto Mouse::on_mouse_enter() noexcept -> void
+{
+    mouse_is_in_window = true;
+    buffer.emplace(Event::Type::Enter, *this);
+    trim_buffer();
+}
+
+auto Mouse::on_mouse_leave() noexcept -> void
+{
+    mouse_is_in_window = false;
+    buffer.emplace(Event::Type::Leave, *this);
     trim_buffer();
 }
 
@@ -114,6 +139,22 @@ auto Mouse::on_wheel_down(int x, int y) noexcept -> void
 {
     buffer.emplace(Event::Type::WheelDown, x, y, *this);
     trim_buffer();
+}
+
+auto Mouse::on_wheel_delta(int x, int y, int delta) noexcept -> void
+{
+    wheel_delta_carry += delta;
+    // generate events for every 120 
+    while( wheel_delta_carry >= WHEEL_DELTA )
+    {
+        wheel_delta_carry -= WHEEL_DELTA;
+        on_wheel_up( x,y );
+    }
+    while( wheel_delta_carry <= -WHEEL_DELTA )
+    {
+        wheel_delta_carry += WHEEL_DELTA;
+        on_wheel_down( x,y );
+    }
 }
 
 auto Mouse::trim_buffer() noexcept -> void
@@ -152,6 +193,11 @@ auto Mouse::is_right_pressed() const noexcept -> bool
 auto Mouse::is_middle_pressed() const noexcept -> bool
 {
     return middle_is_pressed;
+}
+
+auto Mouse::is_in_window() const noexcept -> bool
+{
+    return mouse_is_in_window;
 }
 
 auto Mouse::read_event() noexcept -> Event

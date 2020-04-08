@@ -52,26 +52,27 @@ public:
 private:
     int width = 0;
     int height = 0;
-    HWND h_win{};
+    HWND h_wnd{};
 
 public:
     Keyboard kbd{};
     Mouse mouse{};
 
 private:
-    static auto CALLBACK handle_msg_setup(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
-    static auto CALLBACK handle_msg_thunk(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
+    static auto CALLBACK handle_msg_setup(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
+    static auto CALLBACK handle_msg_thunk(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
 
 private:
-    auto handle_msg(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
+    auto handle_msg(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
 
 public:
-    Window(int width, int height, const wchar_t* name) noexcept;
+    Window(int width, int height, const wchar_t* name);
     Window(const Window&) = delete;
     Window(Window&&) = default;
     ~Window();
     auto operator=(const Window&) -> Window& = delete;
     auto operator=(Window &&) -> Window& = default;
+    auto set_title(const std::wstring& title) -> void;
 };
 
 #define MK_WND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)

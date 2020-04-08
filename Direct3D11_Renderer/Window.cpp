@@ -41,7 +41,7 @@ auto Window::WindowClass::get_instance() noexcept -> HINSTANCE
 }
 
 // Window Stuff
-Window::Window(int width, int height, const wchar_t* name) noexcept
+Window::Window(int width, int height, const wchar_t* name)
     : width(width)
     , height(height)
 {
@@ -50,9 +50,12 @@ Window::Window(int width, int height, const wchar_t* name) noexcept
     wr.right = width + wr.left;
     wr.top = 100;
     wr.bottom = height + wr.top;
-    AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, false);
+    if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, false) == 0)
+    {
+        throw MK_WND_LAST_EXCEPT();
+    }
 
-    h_win = CreateWindow(WindowClass::get_name(),
+    h_wnd = CreateWindow(WindowClass::get_name(),
                          name,
                          WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
                          CW_USEDEFAULT,
@@ -64,15 +67,23 @@ Window::Window(int width, int height, const wchar_t* name) noexcept
                          WindowClass::get_instance(),
                          this);
 
-    ShowWindow(h_win, SW_SHOWDEFAULT);
+    ShowWindow(h_wnd, SW_SHOWDEFAULT);
 }
 
 Window::~Window()
 {
-    DestroyWindow(h_win);
+    DestroyWindow(h_wnd);
 }
 
-auto WINAPI Window::handle_msg_setup(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT
+auto Window::set_title(const std::wstring& title) -> void
+{
+    if (SetWindowText(h_wnd, title.c_str()) == 0)
+    {
+        throw MK_WND_LAST_EXCEPT();
+    }
+}
+
+auto WINAPI Window::handle_msg_setup(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT
 {
     if (msg == WM_NCCREATE)
     {
@@ -80,59 +91,161 @@ auto WINAPI Window::handle_msg_setup(HWND h_win, UINT msg, WPARAM w_param, LPARA
         const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(l_param);
         Window* const pWnd = static_cast<Window*>(pCreate->lpCreateParams);
         // set WinAPI-managed user data to store ptr to window class
-        SetWindowLongPtr(h_win, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
+        SetWindowLongPtr(h_wnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
         // set message proc to normal (non-setup) handler now that setup is finished
-        SetWindowLongPtr(h_win, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::handle_msg_thunk));
+        SetWindowLongPtr(h_wnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::handle_msg_thunk));
         // forward message to window class handler
-        return pWnd->handle_msg(h_win, msg, w_param, l_param);
+        return pWnd->handle_msg(h_wnd, msg, w_param, l_param);
     }
     // if we get a message before the WM_NCCREATE message, handle with default handler
-    return DefWindowProc(h_win, msg, w_param, l_param);
+    return DefWindowProc(h_wnd, msg, w_param, l_param);
 }
 
-auto WINAPI Window::handle_msg_thunk(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT
+auto WINAPI Window::handle_msg_thunk(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT
 {
     // retrieve ptr to window instance
-    Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(h_win, GWLP_USERDATA));
+    Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(h_wnd, GWLP_USERDATA));
     // forward message to window instance handler
-    return pWnd->handle_msg(h_win, msg, w_param, l_param);
+    return pWnd->handle_msg(h_wnd, msg, w_param, l_param);
 }
 
-auto Window::handle_msg(HWND h_win, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT
+auto Window::handle_msg(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT
 {
     switch (msg)
     {
     case WM_CLOSE:
+    {
         PostQuitMessage(0);
         return 0;
+    }
     case WM_KILLFOCUS:
+    {
         kbd.clear_keystates();
         break;
-
+    }
         // -------------------------------------------------------
         //                  Keyboard messages
         // -------------------------------------------------------
     case WM_KEYDOWN:
         [[fallthrough]];
     case WM_SYSKEYDOWN:
+    {
         // Autorepeat is bit 30 flag in l_param
         if (!(l_param & (0b1 << 30)) || kbd.autorepeat_is_enabled())
         {
             kbd.on_key_press(static_cast<unsigned char>(w_param));
         }
         break;
+    }
     case WM_KEYUP:
         [[fallthrough]];
     case WM_SYSKEYUP:
+    {
         kbd.on_key_release(static_cast<unsigned char>(w_param));
         break;
+    }
     case WM_CHAR:
+    {
         kbd.on_char(static_cast<unsigned char>(w_param));
         break;
+    }
+        // -------------------------------------------------------
+
+        // -------------------------------------------------------
+        //                    Mouse messages
+        // -------------------------------------------------------
+    case WM_MOUSEMOVE:
+    {
+        const POINTS pt = MAKEPOINTS(l_param);
+        // in client region -> log move, and log enter + capture mouse (if not previously in window)
+        if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height)
+        {
+            mouse.on_mouse_move(pt.x, pt.y);
+            if (!mouse.is_in_window())
+            {
+                SetCapture(h_wnd);
+                mouse.on_mouse_enter();
+            }
+        }
+        // not in client -> log move / maintain capture if button down
+        else
+        {
+            if (w_param & (MK_LBUTTON | MK_RBUTTON | MK_MBUTTON))
+            {
+                mouse.on_mouse_move(pt.x, pt.y);
+            }
+            // button up -> release capture / log event for leaving
+            else
+            {
+                ReleaseCapture();
+                mouse.on_mouse_leave();
+            }
+        }
+        break;
+    }
+    case WM_LBUTTONDOWN:
+    {
+        const POINTS pt = MAKEPOINTS(l_param);
+        mouse.on_left_pressed(pt.x, pt.y);
+        break;
+    }
+    case WM_RBUTTONDOWN:
+    {
+        const POINTS pt = MAKEPOINTS(l_param);
+        mouse.on_right_pressed(pt.x, pt.y);
+        break;
+    }
+    case WM_MBUTTONDOWN:
+    {
+        const POINTS pt = MAKEPOINTS(l_param);
+        mouse.on_middle_pressed(pt.x, pt.y);
+        break;
+    }
+    case WM_LBUTTONUP:
+    {
+        const POINTS pt = MAKEPOINTS(l_param);
+        mouse.on_left_released(pt.x, pt.y);
+        // release mouse if outside of window
+        if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
+        {
+            ReleaseCapture();
+            mouse.on_mouse_leave();
+        }
+        break;
+    }
+    case WM_RBUTTONUP:
+    {
+        const POINTS pt = MAKEPOINTS(l_param);
+        mouse.on_right_released(pt.x, pt.y);
+        if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
+        {
+            ReleaseCapture();
+            mouse.on_mouse_leave();
+        }
+        break;
+    }
+    case WM_MBUTTONUP:
+    {
+        const POINTS pt = MAKEPOINTS(l_param);
+        mouse.on_middle_released(pt.x, pt.y);
+        if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
+        {
+            ReleaseCapture();
+            mouse.on_mouse_leave();
+        }
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        const POINTS pt = MAKEPOINTS(l_param);
+        const int delta = GET_WHEEL_DELTA_WPARAM(w_param);
+        mouse.on_wheel_delta(pt.x, pt.y, delta);
+        break;
+    }
         // -------------------------------------------------------
     }
 
-    return DefWindowProc(h_win, msg, w_param, l_param);
+    return DefWindowProc(h_wnd, msg, w_param, l_param);
 }
 
 auto Window::Exception::translate_error_code(HRESULT hr) noexcept -> std::string
