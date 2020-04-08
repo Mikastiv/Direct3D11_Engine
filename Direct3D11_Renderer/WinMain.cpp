@@ -1,5 +1,4 @@
-#include "WinDefines.hpp"
-#include "Window.hpp"
+#include "App.hpp"
 #include "Helpers.hpp"
 
 #include <clocale>
@@ -11,27 +10,9 @@ auto CALLBACK WinMain([[maybe_unused]] HINSTANCE hInstance,
 {
     setlocale(LC_ALL, "en-US");
 
-    constexpr int wnd_width = 800;
-    constexpr int wnd_height = 600;
-
     try
     {
-        Window wnd(wnd_width, wnd_height, L"Direct3D11 Engine");
-
-        MSG msg{};
-        BOOL msg_result{};
-        while ((msg_result = GetMessage(&msg, nullptr, 0, 0)) > 0)
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-
-        if (msg_result == -1)
-        {
-            throw MK_WND_LAST_EXCEPT();
-        }
-
-        return (int)msg.wParam;
+        return App{}.start();
     }
     catch (const MikastivException& e)
     {

@@ -109,6 +109,24 @@ auto WINAPI Window::handle_msg_thunk(HWND h_wnd, UINT msg, WPARAM w_param, LPARA
     return pWnd->handle_msg(h_wnd, msg, w_param, l_param);
 }
 
+auto Window::process_messages() -> std::optional<int>
+{
+    MSG msg{};
+
+    while (PeekMessage(&msg, nullptr, 0u, 0u, PM_REMOVE))
+    {
+        if (msg.message == WM_QUIT)
+        {
+            return (int)msg.wParam;
+        }
+
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return {};
+}
+
 auto Window::handle_msg(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT
 {
     switch (msg)

@@ -93,6 +93,7 @@
     <None Include=".clang-tidy" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App.hpp" />
     <ClInclude Include="Helpers.hpp" />
     <ClInclude Include="Keyboard.hpp" />
     <ClInclude Include="MikastivException.hpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="App.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="MikastivException.cpp" />
     <ClCompile Include="Mouse.cpp" />

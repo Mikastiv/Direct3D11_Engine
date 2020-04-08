@@ -144,16 +144,16 @@ auto Mouse::on_wheel_down(int x, int y) noexcept -> void
 auto Mouse::on_wheel_delta(int x, int y, int delta) noexcept -> void
 {
     wheel_delta_carry += delta;
-    // generate events for every 120 
-    while( wheel_delta_carry >= WHEEL_DELTA )
+    // generate events for every 120
+    while (wheel_delta_carry >= WHEEL_DELTA)
     {
         wheel_delta_carry -= WHEEL_DELTA;
-        on_wheel_up( x,y );
+        on_wheel_up(x, y);
     }
-    while( wheel_delta_carry <= -WHEEL_DELTA )
+    while (wheel_delta_carry <= -WHEEL_DELTA)
     {
         wheel_delta_carry += WHEEL_DELTA;
-        on_wheel_down( x,y );
+        on_wheel_down(x, y);
     }
 }
 
@@ -207,7 +207,7 @@ auto Mouse::read_event() noexcept -> Event
         return Event{};
     }
 
-    Event e{buffer.front()};
+    Event e{ buffer.front() };
     buffer.pop();
     return e;
 }

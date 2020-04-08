@@ -5,6 +5,8 @@
 #include "Keyboard.hpp"
 #include "Mouse.hpp"
 
+#include <optional>
+
 class Window
 {
 private:
@@ -61,6 +63,9 @@ public:
 private:
     static auto CALLBACK handle_msg_setup(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
     static auto CALLBACK handle_msg_thunk(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
+
+public:
+    static auto process_messages() -> std::optional<int>;
 
 private:
     auto handle_msg(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
