@@ -79,10 +79,10 @@ private:
 public:
     Mouse() = default;
     Mouse(const Mouse&) = delete;
-    Mouse(Mouse&&) = default;
+    Mouse(Mouse&&) = delete;
     ~Mouse() = default;
     auto operator=(const Mouse&) -> Mouse& = delete;
-    auto operator=(Mouse &&) -> Mouse& = default;
+    auto operator=(Mouse &&) -> Mouse& = delete;
     auto get_pos() const noexcept -> std::pair<int, int>;
     auto get_pos_x() const noexcept -> int;
     auto get_pos_y() const noexcept -> int;

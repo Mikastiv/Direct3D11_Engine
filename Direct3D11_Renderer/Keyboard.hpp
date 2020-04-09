@@ -53,10 +53,10 @@ private:
 public:
     Keyboard() = default;
     Keyboard(const Keyboard&) = delete;
-    Keyboard(Keyboard&&) = default;
+    Keyboard(Keyboard&&) = delete;
     ~Keyboard() = default;
     auto operator=(const Keyboard&) -> Keyboard& = delete;
-    auto operator=(Keyboard &&) -> Keyboard& = default;
+    auto operator=(Keyboard &&) -> Keyboard& = delete;
 
     auto key_is_pressed(unsigned char keycode) const noexcept -> bool;
     // Read a key event from the queue

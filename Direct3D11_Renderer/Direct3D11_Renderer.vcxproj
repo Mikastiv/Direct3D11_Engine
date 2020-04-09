@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp" />
+    <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="Helpers.hpp" />
     <ClInclude Include="Keyboard.hpp" />
     <ClInclude Include="MikastivException.hpp" />
@@ -104,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="MikastivException.cpp" />
     <ClCompile Include="Mouse.cpp" />

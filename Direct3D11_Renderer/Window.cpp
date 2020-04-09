@@ -68,6 +68,8 @@ Window::Window(int width, int height, const wchar_t* name)
                          this);
 
     ShowWindow(h_wnd, SW_SHOWDEFAULT);
+
+    p_gfx = std::make_unique<Graphics>(h_wnd);
 }
 
 Window::~Window()
@@ -81,6 +83,11 @@ auto Window::set_title(const std::wstring& title) -> void
     {
         throw MK_WND_LAST_EXCEPT();
     }
+}
+
+auto Window::gfx() -> Graphics&
+{
+    return *p_gfx;
 }
 
 auto WINAPI Window::handle_msg_setup(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT

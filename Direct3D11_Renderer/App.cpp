@@ -7,7 +7,8 @@ App::App()
 
 auto App::do_frame() -> void
 {
-
+    wnd.gfx().clear_buffer(0.0f, 0.0f, 0.0f);
+    wnd.gfx().end_frame();
 }
 
 auto App::start() -> int

@@ -2,10 +2,12 @@
 
 #include "WinDefines.hpp"
 #include "MikastivException.hpp"
+#include "Graphics.hpp"
 #include "Keyboard.hpp"
 #include "Mouse.hpp"
 
 #include <optional>
+#include <memory>
 
 class Window
 {
@@ -59,6 +61,7 @@ private:
 public:
     Keyboard kbd{};
     Mouse mouse{};
+    std::unique_ptr<Graphics> p_gfx{};
 
 private:
     static auto CALLBACK handle_msg_setup(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
@@ -73,11 +76,12 @@ private:
 public:
     Window(int width, int height, const wchar_t* name);
     Window(const Window&) = delete;
-    Window(Window&&) = default;
+    Window(Window&&) = delete;
     ~Window();
     auto operator=(const Window&) -> Window& = delete;
-    auto operator=(Window &&) -> Window& = default;
+    auto operator=(Window &&) -> Window& = delete;
     auto set_title(const std::wstring& title) -> void;
+    auto gfx() -> Graphics&;
 };
 
 #define MK_WND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)
