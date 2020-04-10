@@ -91,6 +91,6 @@ public:
     auto gfx() -> Graphics&;
 };
 
-#define MK_WND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)
-#define MK_WND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError())
-#define MK_WND_NOGFX_EXCEPT() Window::NoGfxException(__LINE__, __FILE__)
+#define MKWND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)
+#define MKWND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError())
+#define MKWND_NOGFX_EXCEPT() Window::NoGfxException(__LINE__, __FILE__)

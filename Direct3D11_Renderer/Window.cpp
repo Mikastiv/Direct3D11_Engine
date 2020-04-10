@@ -52,7 +52,7 @@ Window::Window(int width, int height, const wchar_t* name)
     wr.bottom = height + wr.top;
     if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, false) == 0)
     {
-        throw MK_WND_LAST_EXCEPT();
+        throw MKWND_LAST_EXCEPT();
     }
 
     h_wnd = CreateWindow(WindowClass::get_name(),
@@ -81,7 +81,7 @@ auto Window::set_title(const std::wstring& title) -> void
 {
     if (SetWindowText(h_wnd, title.c_str()) == 0)
     {
-        throw MK_WND_LAST_EXCEPT();
+        throw MKWND_LAST_EXCEPT();
     }
 }
 
@@ -89,7 +89,7 @@ auto Window::gfx() -> Graphics&
 {
     if (!p_gfx)
     {
-        throw MK_WND_NOGFX_EXCEPT();
+        throw MKWND_NOGFX_EXCEPT();
     }
     return *p_gfx;
 }
