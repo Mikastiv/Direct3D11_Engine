@@ -11,7 +11,6 @@ private:
 
 private:
     Window wnd;
-    bool loop_game = true;
 
 private:
     auto do_frame() -> void;

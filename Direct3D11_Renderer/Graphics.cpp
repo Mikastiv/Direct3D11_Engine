@@ -3,6 +3,8 @@
 
 #include <sstream>
 
+using namespace Microsoft::WRL;
+
 #pragma comment(lib, "d3d11.lib")
 
 #define GFX_EXCEPT_NOINFO(hr) Graphics::Exception(__LINE__, __FILE__, hr)
@@ -149,30 +151,9 @@ Graphics::Graphics(HWND h_wnd)
                                                  nullptr,
                                                  &p_context));
 
-    ID3D11Resource* p_back_buffer = nullptr;
-    GFX_THROW_INFO(p_swap->GetBuffer(0u, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&p_back_buffer)));
-    GFX_THROW_INFO(p_device->CreateRenderTargetView(p_back_buffer, nullptr, &p_target));
-    p_back_buffer->Release();
-}
-
-Graphics::~Graphics()
-{
-    if (p_target != nullptr)
-    {
-        p_target->Release();
-    }
-    if (p_context != nullptr)
-    {
-        p_context->Release();
-    }
-    if (p_swap != nullptr)
-    {
-        p_swap->Release();
-    }
-    if (p_device != nullptr)
-    {
-        p_device->Release();
-    }
+    ComPtr<ID3D11Resource> p_back_buffer{};
+    GFX_THROW_INFO(p_swap->GetBuffer(0u, __uuidof(ID3D11Resource), &p_back_buffer));
+    GFX_THROW_INFO(p_device->CreateRenderTargetView(p_back_buffer.Get(), nullptr, &p_target));
 }
 
 auto Graphics::end_frame() -> void
@@ -198,5 +179,5 @@ auto Graphics::end_frame() -> void
 auto Graphics::clear_buffer(float red, float green, float blue) noexcept -> void
 {
     const float color[] = { red, green, blue, 1.0f };
-    p_context->ClearRenderTargetView(p_target, color);
+    p_context->ClearRenderTargetView(p_target.Get(), color);
 }

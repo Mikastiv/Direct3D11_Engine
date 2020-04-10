@@ -5,6 +5,7 @@
 #include "DXGIInfoManager.hpp"
 
 #include <d3d11.h>
+#include <wrl.h>
 #include <vector>
 
 class Graphics
@@ -39,16 +40,16 @@ private:
 #ifdef _DEBUG
     DXGIInfoManager info_manager{};
 #endif
-    ID3D11Device* p_device = nullptr;
-    ID3D11DeviceContext* p_context = nullptr;
-    IDXGISwapChain* p_swap = nullptr;
-    ID3D11RenderTargetView* p_target = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11Device> p_device{};
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> p_context{};
+    Microsoft::WRL::ComPtr<IDXGISwapChain> p_swap{};
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target{};
 
 public:
     explicit Graphics(HWND h_wnd);
     Graphics(const Graphics&) = delete;
     Graphics(Graphics&&) = delete;
-    ~Graphics();
+    ~Graphics() = default;
     auto operator=(const Graphics&) -> Graphics& = delete;
     auto operator=(Graphics &&) -> Graphics& = delete;
     auto end_frame() -> void;

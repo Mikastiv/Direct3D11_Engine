@@ -12,7 +12,8 @@ auto CALLBACK WinMain([[maybe_unused]] HINSTANCE hInstance,
 
     try
     {
-        return App{}.start();
+        App app{};
+        return app.start();
     }
     catch (const MikastivException& e)
     {
