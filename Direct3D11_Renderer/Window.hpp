@@ -50,7 +50,14 @@ public:
         auto what() const noexcept -> const char* override;
         auto get_type() const noexcept -> const char* override;
         auto get_error_code() const noexcept -> HRESULT;
-        auto get_error_string() const noexcept -> std::string;
+        auto get_error_description() const noexcept -> std::string;
+    };
+
+    class NoGfxException : public MikastivException
+    {
+    public:
+        NoGfxException(int line, const char* file) noexcept;
+        auto get_type() const noexcept -> const char* override;
     };
 
 private:
@@ -68,7 +75,7 @@ private:
     static auto CALLBACK handle_msg_thunk(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
 
 public:
-    static auto process_messages() -> std::optional<int>;
+    static auto process_messages() noexcept -> std::optional<int>;
 
 private:
     auto handle_msg(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
@@ -86,3 +93,4 @@ public:
 
 #define MK_WND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)
 #define MK_WND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError())
+#define MK_WND_NOGFX_EXCEPT() Window::NoGfxException(__LINE__, __FILE__)

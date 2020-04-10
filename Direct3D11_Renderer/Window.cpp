@@ -87,6 +87,10 @@ auto Window::set_title(const std::wstring& title) -> void
 
 auto Window::gfx() -> Graphics&
 {
+    if (!p_gfx)
+    {
+        throw MK_WND_NOGFX_EXCEPT();
+    }
     return *p_gfx;
 }
 
@@ -113,10 +117,11 @@ auto WINAPI Window::handle_msg_thunk(HWND h_wnd, UINT msg, WPARAM w_param, LPARA
     // retrieve ptr to window instance
     Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(h_wnd, GWLP_USERDATA));
     // forward message to window instance handler
+
     return pWnd->handle_msg(h_wnd, msg, w_param, l_param);
 }
 
-auto Window::process_messages() -> std::optional<int>
+auto Window::process_messages() noexcept -> std::optional<int>
 {
     MSG msg{};
 
@@ -276,7 +281,7 @@ auto Window::handle_msg(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) no
 auto Window::Exception::translate_error_code(HRESULT hr) noexcept -> std::string
 {
     wchar_t* p_msg_buf = nullptr;
-    DWORD msg_len =
+    const DWORD msg_len =
         FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                       nullptr,
                       hr,
@@ -307,11 +312,11 @@ Window::Exception::Exception(int line, const char* file, HRESULT hr) noexcept
 const char* Window::Exception::what() const noexcept
 {
     std::ostringstream oss;
-    oss << get_type() << '\n'
-        << "[Error Code] " << get_error_code() << '\n'
-        << "[Description] " << get_error_string() << '\n'
+    oss << get_type() << std::endl
+        << "[Error Code] 0x" << std::hex << std::uppercase << get_error_code() << std::dec << " ("
+        << (unsigned long)get_error_code() << ")\n"
+        << "[Description] " << get_error_description() << '\n'
         << get_origin_string();
-
     what_buffer = oss.str();
     return what_buffer.c_str();
 }
@@ -326,7 +331,17 @@ auto Window::Exception::get_error_code() const noexcept -> HRESULT
     return hr;
 }
 
-auto Window::Exception::get_error_string() const noexcept -> std::string
+auto Window::Exception::get_error_description() const noexcept -> std::string
 {
     return translate_error_code(hr);
+}
+
+Window::NoGfxException::NoGfxException(int line, const char* file) noexcept
+    : MikastivException(line, file)
+{
+}
+
+auto Window::NoGfxException::get_type() const noexcept -> const char*
+{
+    return "Chili Window Exception [No Graphics]";
 }

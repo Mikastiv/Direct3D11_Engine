@@ -1,8 +1,8 @@
 #pragma once
 
 // target Windows 7 or later
-constexpr int WINVER = 0x0601;
-constexpr int _WIN32_WINNT = 0x0601;
+constexpr int WINVER = 0x0602;
+constexpr int _WIN32_WINNT = 0x0602;
 #include <sdkddkver.h>
 
 #define WIN32_LEAN_AND_MEAN
