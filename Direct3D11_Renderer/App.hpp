@@ -4,6 +4,13 @@
 
 class App
 {
+public:
+    App();
+    auto start() -> int;
+
+private:
+    auto do_frame() -> void;
+
 private:
     static constexpr int window_width = 1280;
     static constexpr int window_height = 720;
@@ -11,11 +18,4 @@ private:
 
 private:
     Window wnd;
-
-private:
-    auto do_frame() -> void;
-
-public:
-    App();
-    auto start() -> int;
 };

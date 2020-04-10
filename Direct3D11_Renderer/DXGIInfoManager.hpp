@@ -9,10 +9,6 @@
 
 class DXGIInfoManager
 {
-private:
-    uint64_t next = 0u;
-    Microsoft::WRL::ComPtr<IDXGIInfoQueue> p_dxgi_info_queue{};
-
 public:
     DXGIInfoManager();
     DXGIInfoManager(const DXGIInfoManager&) = delete;
@@ -22,4 +18,8 @@ public:
     auto operator=(DXGIInfoManager &&) -> DXGIInfoManager& = delete;
     auto set() noexcept -> void;
     auto get_messages() const -> std::vector<std::string>;
+
+private:
+    uint64_t next = 0u;
+    Microsoft::WRL::ComPtr<IDXGIInfoQueue> p_dxgi_info_queue{};
 };
