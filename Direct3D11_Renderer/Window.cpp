@@ -68,8 +68,6 @@ Window::Window(int width, int height, const wchar_t* name)
                          this);
 
     ShowWindow(h_wnd, SW_SHOWDEFAULT);
-
-    p_gfx = std::make_unique<Graphics>(h_wnd);
 }
 
 Window::~Window()
@@ -83,6 +81,16 @@ auto Window::set_title(const std::wstring& title) -> void
     {
         throw MKWND_LAST_EXCEPT();
     }
+}
+
+auto Window::create_gfx() -> void
+{
+    p_gfx = std::make_unique<Graphics>(h_wnd);
+}
+
+auto Window::has_gfx() const -> bool
+{
+    return !!p_gfx;
 }
 
 auto Window::gfx() -> Graphics&

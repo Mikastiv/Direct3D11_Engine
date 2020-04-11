@@ -76,6 +76,8 @@ public:
     auto operator=(const Window&) -> Window& = delete;
     auto operator=(Window &&) -> Window& = delete;
     auto set_title(const std::wstring& title) -> void;
+    auto create_gfx() -> void;
+    auto has_gfx() const -> bool;
     auto gfx() -> Graphics&;
 
 private:

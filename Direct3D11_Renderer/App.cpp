@@ -13,6 +13,11 @@ auto App::do_frame() -> void
 
 auto App::start() -> int
 {
+    if (!wnd.has_gfx())
+    {
+        wnd.create_gfx();
+    }
+
     while (true)
     {
         if (const auto code = Window::process_messages())
