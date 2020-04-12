@@ -7,7 +7,7 @@
 
 #define GFX_THROW_NOINFO(hrcall)                                                                                       \
     if (FAILED(hr = (hrcall)))                                                                                         \
-    throw Graphics::Exception(__LINE__, __FILE__, hr)
+    throw Graphics::HrException(__LINE__, __FILE__, hr)
 
 DXGIInfoManager::DXGIInfoManager()
 {
@@ -47,8 +47,8 @@ auto DXGIInfoManager::get_messages() const -> std::vector<std::string>
     const auto end = p_dxgi_info_queue->GetNumStoredMessages(DXGI_DEBUG_ALL);
     for (auto i = next; i < end; i++)
     {
-        HRESULT hr;
-        SIZE_T message_length;
+        HRESULT hr{};
+        SIZE_T message_length{};
         // get the size of message i in bytes
         GFX_THROW_NOINFO(p_dxgi_info_queue->GetMessage(DXGI_DEBUG_ALL, i, nullptr, &message_length));
 

@@ -7,28 +7,39 @@ using namespace Microsoft::WRL;
 
 #pragma comment(lib, "d3d11.lib")
 
-#define GFX_EXCEPT_NOINFO(hr) Graphics::Exception(__LINE__, __FILE__, hr)
+#define GFX_EXCEPT_NOINFO(hr) Graphics::HrException(__LINE__, __FILE__, hr)
 
 #define GFX_THROW_NOINFO(hrcall)                                                                                       \
     if (FAILED(hr = (hrcall)))                                                                                         \
-    throw Graphics::Exception(__LINE__, __FILE__, hr)
+    throw Graphics::HrException(__LINE__, __FILE__, hr)
 
 #ifdef _DEBUG
-#define GFX_EXCEPT(hr) Graphics::Exception(__LINE__, __FILE__, hr, info_manager.get_messages())
+#define GFX_EXCEPT(hr) Graphics::HrException(__LINE__, __FILE__, hr, info_manager.get_messages())
 #define GFX_THROW_INFO(hrcall)                                                                                         \
     info_manager.set();                                                                                                \
     if (FAILED(hr = (hrcall)))                                                                                         \
     throw GFX_EXCEPT(hr)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr)                                                                                  \
     Graphics::DeviceRemovedException(__LINE__, __FILE__, hr, info_manager.get_messages())
+#define GFX_THROW_INFO_ONLY(fn_call)                                                                                   \
+    info_manager.set();                                                                                                \
+    fn_call;                                                                                                           \
+    {                                                                                                                  \
+        auto v = info_manager.get_messages();                                                                          \
+        if (!v.empty())                                                                                                \
+        {                                                                                                              \
+            throw Graphics::InfoException(__LINE__, __FILE__, v);                                                      \
+        }                                                                                                              \
+    }
 #else
-#define GFX_EXCEPT(hr) Graphics::Exception(__LINE__, __FILE__, hr)
+#define GFX_EXCEPT(hr) Graphics::HrException(__LINE__, __FILE__, hr)
 #define GFX_THROW_INFO(hrcall) GFX_THROW_NOINFO(hrcall)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException(__LINE__, __FILE__, hr)
+#define GFX_THROW_INFO_ONLY(fn_call) fn_call
 #endif
 
-Graphics::Exception::Exception(int line, const char* file, HRESULT hr, std::vector<std::string> info_msgs) noexcept
-    : MikastivException(line, file)
+Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::vector<std::string> info_msgs) noexcept
+    : Exception(line, file)
     , hr(hr)
 {
     for (const auto& m : info_msgs)
@@ -43,7 +54,7 @@ Graphics::Exception::Exception(int line, const char* file, HRESULT hr, std::vect
     }
 }
 
-auto Graphics::Exception::what() const noexcept -> const char*
+auto Graphics::HrException::what() const noexcept -> const char*
 {
     std::ostringstream oss;
     oss << get_type() << std::endl
@@ -60,17 +71,17 @@ auto Graphics::Exception::what() const noexcept -> const char*
     return what_buffer.c_str();
 }
 
-auto Graphics::Exception::get_type() const noexcept -> const char*
+auto Graphics::HrException::get_type() const noexcept -> const char*
 {
     return "Mikastiv Graphics Exception";
 }
 
-auto Graphics::Exception::get_error_code() const noexcept -> HRESULT
+auto Graphics::HrException::get_error_code() const noexcept -> HRESULT
 {
     return hr;
 }
 
-auto Graphics::Exception::get_error_description() const noexcept -> std::string
+auto Graphics::HrException::get_error_description() const noexcept -> std::string
 {
     wchar_t* p_msg_buf = nullptr;
     const DWORD msg_len =
@@ -95,7 +106,7 @@ auto Graphics::Exception::get_error_description() const noexcept -> std::string
     return error_string;
 }
 
-auto Graphics::Exception::get_error_info() const noexcept -> std::string
+auto Graphics::HrException::get_error_info() const noexcept -> std::string
 {
     return info;
 }
@@ -104,7 +115,7 @@ Graphics::DeviceRemovedException::DeviceRemovedException(int line,
                                                          const char* file,
                                                          HRESULT hr,
                                                          std::vector<std::string> info_msgs) noexcept
-    : Exception(line, file, hr, info_msgs)
+    : HrException(line, file, hr, info_msgs)
 {
 }
 
@@ -180,4 +191,69 @@ auto Graphics::clear_buffer(float red, float green, float blue) noexcept -> void
 {
     const float color[] = { red, green, blue, 1.0f };
     p_context->ClearRenderTargetView(p_target.Get(), color);
+}
+
+auto Graphics::draw_test_triangle() -> void
+{
+    HRESULT hr{};
+
+    struct Vertex
+    {
+        float x;
+        float y;
+    };
+
+    const Vertex vertices[]{ { 0.0f, 0.5f }, { 0.5f, -0.5f }, { -0.5f, -0.5f } };
+
+    Microsoft::WRL::ComPtr<ID3D11Buffer> p_vertex_buffer{};
+
+    D3D11_BUFFER_DESC desc{};
+    desc.ByteWidth = sizeof(vertices);
+    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    desc.CPUAccessFlags = 0u;
+    desc.MiscFlags = 0u;
+    desc.StructureByteStride = sizeof(Vertex);
+
+    D3D11_SUBRESOURCE_DATA data{};
+    data.pSysMem = vertices;
+
+    GFX_THROW_INFO(p_device->CreateBuffer(&desc, &data, &p_vertex_buffer));
+    const UINT stride = sizeof(Vertex);
+    const UINT offset = 0u;
+    p_context->IASetVertexBuffers(0u, 1u, p_vertex_buffer.GetAddressOf(), &stride, &offset);
+    GFX_THROW_INFO_ONLY(p_context->Draw(3u, 0));
+}
+
+Graphics::InfoException::InfoException(int line, const char* file, std::vector<std::string> info_msgs) noexcept
+    : Exception(line, file)
+{
+    for (const auto& m : info_msgs)
+    {
+        info += m;
+        info.push_back('\n');
+    }
+    if (!info.empty())
+    {
+        info.pop_back();
+    }
+}
+
+auto Graphics::InfoException::what() const noexcept -> const char*
+{
+    std::ostringstream oss;
+    oss << get_type() << "\n\n[Error Info]\n" << get_error_info() << "\n\n";
+    oss << get_origin_string();
+    what_buffer = oss.str();
+    return what_buffer.c_str();
+}
+
+auto Graphics::InfoException::get_type() const noexcept -> const char*
+{
+    return "Mikastiv Graphics Info Exception";
+}
+
+auto Graphics::InfoException::get_error_info() const noexcept -> std::string
+{
+    return info;
 }

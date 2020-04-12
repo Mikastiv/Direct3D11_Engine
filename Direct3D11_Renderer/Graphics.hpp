@@ -13,8 +13,12 @@ class Graphics
 public:
     class Exception : public MikastivException
     {
+        using MikastivException::MikastivException;
+    };
+    class HrException : public Exception
+    {
     public:
-        Exception(int line, const char* file, HRESULT hr, std::vector<std::string> info_msgs = {}) noexcept;
+        HrException(int line, const char* file, HRESULT hr, std::vector<std::string> info_msgs = {}) noexcept;
         auto what() const noexcept -> const char* override;
         auto get_type() const noexcept -> const char* override;
         auto get_error_code() const noexcept -> HRESULT;
@@ -26,7 +30,19 @@ public:
         std::string info{};
     };
 
-    class DeviceRemovedException : public Exception
+    class InfoException : public Exception
+    {
+    public:
+        InfoException(int line, const char* file, std::vector<std::string> info_msgs) noexcept;
+        auto what() const noexcept -> const char* override;
+        auto get_type() const noexcept -> const char* override;
+        auto get_error_info() const noexcept ->std::string;
+
+    private:
+        std::string info{};
+    };
+
+    class DeviceRemovedException : public HrException
     {
     public:
         DeviceRemovedException(int line,
@@ -45,6 +61,7 @@ public:
     auto operator=(Graphics &&) -> Graphics& = delete;
     auto end_frame() -> void;
     auto clear_buffer(float red, float green, float blue) noexcept -> void;
+    auto draw_test_triangle() -> void;
 
 private:
 #ifdef _DEBUG
