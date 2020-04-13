@@ -2,10 +2,12 @@
 #include "Helpers.hpp"
 
 #include <sstream>
+#include <d3dcompiler.h>
 
-using namespace Microsoft::WRL;
+namespace WRL = Microsoft::WRL;
 
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "D3DCompiler.lib")
 
 #define GFX_EXCEPT_NOINFO(hr) Graphics::HrException(__LINE__, __FILE__, hr)
 
@@ -162,7 +164,7 @@ Graphics::Graphics(HWND h_wnd)
                                                  nullptr,
                                                  &p_context));
 
-    ComPtr<ID3D11Resource> p_back_buffer{};
+    WRL::ComPtr<ID3D11Resource> p_back_buffer{};
     GFX_THROW_INFO(p_swap->GetBuffer(0u, __uuidof(ID3D11Resource), &p_back_buffer));
     GFX_THROW_INFO(p_device->CreateRenderTargetView(p_back_buffer.Get(), nullptr, &p_target));
 }
@@ -222,7 +224,42 @@ auto Graphics::draw_test_triangle() -> void
     const UINT stride = sizeof(Vertex);
     const UINT offset = 0u;
     p_context->IASetVertexBuffers(0u, 1u, p_vertex_buffer.GetAddressOf(), &stride, &offset);
-    GFX_THROW_INFO_ONLY(p_context->Draw(3u, 0));
+
+    p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    WRL::ComPtr<ID3D11VertexShader> p_vertex_shader{};
+    WRL::ComPtr<ID3DBlob> p_blob{};
+    GFX_THROW_INFO(D3DReadFileToBlob(L"VertexShader.cso", &p_blob));
+    GFX_THROW_INFO(
+        p_device->CreateVertexShader(p_blob->GetBufferPointer(), p_blob->GetBufferSize(), nullptr, &p_vertex_shader));
+    p_context->VSSetShader(p_vertex_shader.Get(), nullptr, 0u);
+
+    WRL::ComPtr<ID3D11InputLayout> p_input_layout{};
+    const D3D11_INPUT_ELEMENT_DESC ied[]{
+        { "POSITION", 0u, DXGI_FORMAT_R32G32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u }
+    };
+    GFX_THROW_INFO(p_device->CreateInputLayout(
+        ied, (UINT)std::size(ied), p_blob->GetBufferPointer(), p_blob->GetBufferSize(), &p_input_layout));
+    p_context->IASetInputLayout(p_input_layout.Get());
+
+    WRL::ComPtr<ID3D11PixelShader> p_pixel_shader{};
+    GFX_THROW_INFO(D3DReadFileToBlob(L"PixelShader.cso", &p_blob));
+    GFX_THROW_INFO(
+        p_device->CreatePixelShader(p_blob->GetBufferPointer(), p_blob->GetBufferSize(), nullptr, &p_pixel_shader));
+    p_context->PSSetShader(p_pixel_shader.Get(), nullptr, 0u);
+
+    p_context->OMSetRenderTargets(1u, p_target.GetAddressOf(), nullptr);
+
+    D3D11_VIEWPORT vp{};
+    vp.Width = (FLOAT)screen_width;
+    vp.Height = (FLOAT)screen_height;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    vp.TopLeftX = 0.0f;
+    vp.TopLeftY = 0.0f;
+    p_context->RSSetViewports(1u, &vp);
+
+    GFX_THROW_INFO_ONLY(p_context->Draw((UINT)std::size(vertices), 0u));
 }
 
 Graphics::InfoException::InfoException(int line, const char* file, std::vector<std::string> info_msgs) noexcept

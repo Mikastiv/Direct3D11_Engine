@@ -36,7 +36,7 @@ public:
         InfoException(int line, const char* file, std::vector<std::string> info_msgs) noexcept;
         auto what() const noexcept -> const char* override;
         auto get_type() const noexcept -> const char* override;
-        auto get_error_info() const noexcept ->std::string;
+        auto get_error_info() const noexcept -> std::string;
 
     private:
         std::string info{};
@@ -62,6 +62,10 @@ public:
     auto end_frame() -> void;
     auto clear_buffer(float red, float green, float blue) noexcept -> void;
     auto draw_test_triangle() -> void;
+
+public:
+    static constexpr int screen_width = 1280;
+    static constexpr int screen_height = 720;
 
 private:
 #ifdef _DEBUG

@@ -1,7 +1,7 @@
 #include "App.hpp"
 
 App::App()
-    : wnd(window_width, window_height, window_title)
+    : wnd(Graphics::screen_width, Graphics::screen_height, window_title)
 {
 }
 
