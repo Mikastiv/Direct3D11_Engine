@@ -201,13 +201,28 @@ auto Graphics::draw_test_triangle() -> void
 
     struct Vertex
     {
-        float x;
-        float y;
+        struct
+        {
+            float x;
+            float y;
+        } pos;
+
+        struct
+        {
+            uint8_t r;
+            uint8_t g;
+            uint8_t b;
+            uint8_t a;
+        } color;
     };
 
-    const Vertex vertices[]{ { 0.0f, 0.5f }, { 0.5f, -0.5f }, { -0.5f, -0.5f } };
+    const Vertex vertices[]{ { 0.0f, 0.5f, 255u, 255u, 0u },  { 0.5f, -0.5f, 255u, 145u, 0u },
+                             { -0.5f, -0.5f, 0u, 0u, 255u },  { -0.3f, 0.25f, 255u, 255u, 0u },
+                             { 0.3f, 0.25f, 255u, 145u, 0u }, { 0.0f, -0.75f, 0u, 0u, 255u } };
 
-    Microsoft::WRL::ComPtr<ID3D11Buffer> p_vertex_buffer{};
+    const uint16_t indices[]{ 0u, 1u, 2u, 0u, 4u, 1u, 1u, 5u, 2u, 0u, 2u, 3u };
+
+    WRL::ComPtr<ID3D11Buffer> p_vertex_buffer{};
 
     D3D11_BUFFER_DESC desc{};
     desc.ByteWidth = sizeof(vertices);
@@ -225,6 +240,22 @@ auto Graphics::draw_test_triangle() -> void
     const UINT offset = 0u;
     p_context->IASetVertexBuffers(0u, 1u, p_vertex_buffer.GetAddressOf(), &stride, &offset);
 
+    WRL::ComPtr<ID3D11Buffer> p_index_buffer{};
+
+    D3D11_BUFFER_DESC desc1{};
+    desc1.ByteWidth = sizeof(indices);
+    desc1.Usage = D3D11_USAGE_DEFAULT;
+    desc1.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    desc1.CPUAccessFlags = 0u;
+    desc1.MiscFlags = 0u;
+    desc1.StructureByteStride = sizeof(uint16_t);
+
+    D3D11_SUBRESOURCE_DATA data1{};
+    data1.pSysMem = indices;
+
+    GFX_THROW_INFO(p_device->CreateBuffer(&desc1, &data1, &p_index_buffer));
+    p_context->IASetIndexBuffer(p_index_buffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
+
     p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     WRL::ComPtr<ID3D11VertexShader> p_vertex_shader{};
@@ -236,7 +267,8 @@ auto Graphics::draw_test_triangle() -> void
 
     WRL::ComPtr<ID3D11InputLayout> p_input_layout{};
     const D3D11_INPUT_ELEMENT_DESC ied[]{
-        { "POSITION", 0u, DXGI_FORMAT_R32G32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u }
+        { "POSITION", 0u, DXGI_FORMAT_R32G32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u },
+        { "COLOR", 0u, DXGI_FORMAT_R8G8B8A8_UNORM, 0u, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0u },
     };
     GFX_THROW_INFO(p_device->CreateInputLayout(
         ied, (UINT)std::size(ied), p_blob->GetBufferPointer(), p_blob->GetBufferSize(), &p_input_layout));
@@ -250,16 +282,10 @@ auto Graphics::draw_test_triangle() -> void
 
     p_context->OMSetRenderTargets(1u, p_target.GetAddressOf(), nullptr);
 
-    D3D11_VIEWPORT vp{};
-    vp.Width = (FLOAT)screen_width;
-    vp.Height = (FLOAT)screen_height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0.0f;
-    vp.TopLeftY = 0.0f;
-    p_context->RSSetViewports(1u, &vp);
+    D3D11_VIEWPORT vp[]{ { 0.0f, 0.0f, (FLOAT)screen_width, (FLOAT)screen_height, 0.0f, 1.0f } };
 
-    GFX_THROW_INFO_ONLY(p_context->Draw((UINT)std::size(vertices), 0u));
+    p_context->RSSetViewports(1u, &vp[0]);
+    GFX_THROW_INFO_ONLY(p_context->DrawIndexed((UINT)std::size(indices), 0u, 0u));
 }
 
 Graphics::InfoException::InfoException(int line, const char* file, std::vector<std::string> info_msgs) noexcept
