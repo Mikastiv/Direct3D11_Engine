@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.hpp"
+#include "MikastivTimer.hpp"
 
 class App
 {
@@ -16,4 +17,5 @@ private:
 
 private:
     Window wnd;
+    Timer ft{};
 };

@@ -61,7 +61,7 @@ public:
     auto operator=(Graphics &&) -> Graphics& = delete;
     auto end_frame() -> void;
     auto clear_buffer(float red, float green, float blue) noexcept -> void;
-    auto draw_test_triangle() -> void;
+    auto draw_test_triangle(float angle, int x, int y) -> void;
 
 public:
     static constexpr int screen_width = 1280;

@@ -3,8 +3,10 @@
 
 #include <sstream>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 
 namespace WRL = Microsoft::WRL;
+namespace DX = DirectX;
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
@@ -195,7 +197,7 @@ auto Graphics::clear_buffer(float red, float green, float blue) noexcept -> void
     p_context->ClearRenderTargetView(p_target.Get(), color);
 }
 
-auto Graphics::draw_test_triangle() -> void
+auto Graphics::draw_test_triangle(float angle, int x, int y) -> void
 {
     HRESULT hr{};
 
@@ -255,6 +257,34 @@ auto Graphics::draw_test_triangle() -> void
 
     GFX_THROW_INFO(p_device->CreateBuffer(&desc1, &data1, &p_index_buffer));
     p_context->IASetIndexBuffer(p_index_buffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
+
+    struct ConstBuffer
+    {
+        DX::XMMATRIX transform;
+    };
+
+    const float xcoord = (x / (Graphics::screen_width / 2.0f) - 1.0f);
+    const float ycoord = -(y / (Graphics::screen_height / 2.0f) - 1.0f);
+
+    const ConstBuffer cb{ DX::XMMatrixTranspose(DX::XMMatrixRotationZ(angle)
+                                                * DX::XMMatrixScaling(9.0f / 16.0f, 1.0f, 1.0f)
+                                                * DX::XMMatrixTranslation(xcoord, ycoord, 0.0f)) };
+
+    WRL::ComPtr<ID3D11Buffer> p_const_buffer{};
+    D3D11_BUFFER_DESC cbd{};
+    cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    cbd.Usage = D3D11_USAGE_DYNAMIC;
+    cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    cbd.MiscFlags = 0u;
+    cbd.ByteWidth = sizeof(cb);
+    cbd.StructureByteStride = 0u;
+
+    D3D11_SUBRESOURCE_DATA data2{};
+    data2.pSysMem = &cb;
+
+    GFX_THROW_INFO(p_device->CreateBuffer(&cbd, &data2, &p_const_buffer));
+
+    p_context->VSSetConstantBuffers(0u, 1u, p_const_buffer.GetAddressOf());
 
     p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

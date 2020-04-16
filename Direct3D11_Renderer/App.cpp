@@ -8,7 +8,7 @@ App::App()
 auto App::do_frame() -> void
 {
     wnd.gfx().clear_buffer(0.0f, 0.0f, 0.0f);
-    wnd.gfx().draw_test_triangle();
+    wnd.gfx().draw_test_triangle(ft.peek(), wnd.mouse.get_pos_x(), wnd.mouse.get_pos_y());
     wnd.gfx().end_frame();
 }
 

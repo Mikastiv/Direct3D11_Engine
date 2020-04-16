@@ -99,6 +99,7 @@
     <ClInclude Include="Helpers.hpp" />
     <ClInclude Include="Keyboard.hpp" />
     <ClInclude Include="MikastivException.hpp" />
+    <ClInclude Include="MikastivTimer.hpp" />
     <ClInclude Include="Mouse.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="WinDefines.hpp" />
