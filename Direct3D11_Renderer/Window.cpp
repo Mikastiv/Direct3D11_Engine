@@ -225,6 +225,7 @@ auto Window::handle_msg(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) no
     {
         const POINTS pt = MAKEPOINTS(l_param);
         mouse.on_left_pressed(pt.x, pt.y);
+        SetForegroundWindow(h_wnd);
         break;
     }
     case WM_RBUTTONDOWN:

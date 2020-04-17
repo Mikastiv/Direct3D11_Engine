@@ -1,10 +1,6 @@
 #include "Keyboard.hpp"
 #include "Mouse.hpp"
 
-Keyboard::Event::Event() noexcept
-{
-}
-
 Keyboard::Event::Event(Type type, unsigned char code) noexcept
     : type(type)
     , code(code)
@@ -19,11 +15,6 @@ auto Keyboard::Event::is_press() const noexcept -> bool
 auto Keyboard::Event::is_release() const noexcept -> bool
 {
     return type == Type::Release;
-}
-
-auto Keyboard::Event::is_valid() const noexcept -> bool
-{
-    return type != Type::Invalid;
 }
 
 auto Keyboard::Event::get_code() const noexcept -> unsigned char
@@ -70,11 +61,11 @@ auto Keyboard::key_is_pressed(unsigned char keycode) const noexcept -> bool
     return keystates[keycode];
 }
 
-auto Keyboard::read_key() noexcept -> Event
+auto Keyboard::read_key() noexcept -> std::optional<Event>
 {
     if (keybuffer.empty())
     {
-        return Event{};
+        return {};
     }
 
     Event e{ keybuffer.front() };
@@ -92,11 +83,11 @@ auto Keyboard::clear_key_queue() noexcept -> void
     keybuffer = std::queue<Event>{};
 }
 
-auto Keyboard::read_char() noexcept -> unsigned char
+auto Keyboard::read_char() noexcept -> std::optional<unsigned char>
 {
     if (charbuffer.empty())
     {
-        return '\0';
+        return {};
     }
 
     unsigned char character = charbuffer.front();

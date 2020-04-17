@@ -1,10 +1,6 @@
 #include "Mouse.hpp"
 #include "WinDefines.hpp"
 
-Mouse::Event::Event() noexcept
-{
-}
-
 Mouse::Event::Event(Type type, const Mouse& parent) noexcept
     : type(type)
     , left_is_pressed(parent.left_is_pressed)
@@ -23,11 +19,6 @@ Mouse::Event::Event(Type type, int x, int y, const Mouse& parent) noexcept
     , x(x)
     , y(y)
 {
-}
-
-auto Mouse::Event::is_valid() const noexcept -> bool
-{
-    return type != Type::Invalid;
 }
 
 auto Mouse::Event::get_type() const noexcept -> Type
@@ -200,11 +191,11 @@ auto Mouse::is_in_window() const noexcept -> bool
     return mouse_is_in_window;
 }
 
-auto Mouse::read_event() noexcept -> Event
+auto Mouse::read_event() noexcept -> std::optional<Event>
 {
     if (buffer.empty())
     {
-        return Event{};
+        return {};
     }
 
     Event e{ buffer.front() };
