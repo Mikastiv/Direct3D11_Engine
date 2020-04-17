@@ -1,4 +1,9 @@
-float4 main(float3 color : COLOR) : SV_TARGET
+cbuffer c_buf1
 {
-	return float4(color, 1.0f);
+    float4 colors[6];
+};
+
+float4 main(uint tid : SV_PrimitiveID) : SV_TARGET
+{
+    return colors[tid / 2];
 }

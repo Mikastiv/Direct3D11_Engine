@@ -169,6 +169,36 @@ Graphics::Graphics(HWND h_wnd)
     WRL::ComPtr<ID3D11Resource> p_back_buffer{};
     GFX_THROW_INFO(p_swap->GetBuffer(0u, __uuidof(ID3D11Resource), &p_back_buffer));
     GFX_THROW_INFO(p_device->CreateRenderTargetView(p_back_buffer.Get(), nullptr, &p_target));
+
+    D3D11_DEPTH_STENCIL_DESC ds_desc{};
+    ds_desc.DepthEnable = true;
+    ds_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    ds_desc.DepthFunc = D3D11_COMPARISON_LESS;
+    WRL::ComPtr<ID3D11DepthStencilState> p_dss_state{};
+    GFX_THROW_INFO(p_device->CreateDepthStencilState(&ds_desc, &p_dss_state));
+
+    p_context->OMSetDepthStencilState(p_dss_state.Get(), 1u);
+
+    WRL::ComPtr<ID3D11Texture2D> p_depth_stencil{};
+    D3D11_TEXTURE2D_DESC desc_depth{};
+    desc_depth.Width = Graphics::screen_width;
+    desc_depth.Height = Graphics::screen_height;
+    desc_depth.MipLevels = 1u;
+    desc_depth.ArraySize = 1u;
+    desc_depth.Format = DXGI_FORMAT_D32_FLOAT;
+    desc_depth.SampleDesc.Count = 1u;
+    desc_depth.SampleDesc.Quality = 0u;
+    desc_depth.Usage = D3D11_USAGE_DEFAULT;
+    desc_depth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    GFX_THROW_INFO(p_device->CreateTexture2D(&desc_depth, nullptr, &p_depth_stencil));
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC desc_ds_view{};
+    desc_ds_view.Format = DXGI_FORMAT_D32_FLOAT;
+    desc_ds_view.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    desc_ds_view.Texture2D.MipSlice = 0u;
+    GFX_THROW_INFO(p_device->CreateDepthStencilView(p_depth_stencil.Get(), &desc_ds_view, &p_dsv));
+
+    p_context->OMSetRenderTargets(1u, p_target.GetAddressOf(), p_dsv.Get());
 }
 
 auto Graphics::end_frame() -> void
@@ -195,6 +225,7 @@ auto Graphics::clear_buffer(float red, float green, float blue) noexcept -> void
 {
     const float color[] = { red, green, blue, 1.0f };
     p_context->ClearRenderTargetView(p_target.Get(), color);
+    p_context->ClearDepthStencilView(p_dsv.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
 auto Graphics::draw_test_triangle(float angle, int x, int y) -> void
@@ -207,22 +238,17 @@ auto Graphics::draw_test_triangle(float angle, int x, int y) -> void
         {
             float x;
             float y;
+            float z;
         } pos;
-
-        struct
-        {
-            uint8_t r;
-            uint8_t g;
-            uint8_t b;
-            uint8_t a;
-        } color;
     };
 
-    const Vertex vertices[]{ { 0.0f, 0.5f, 255u, 255u, 0u },  { 0.5f, -0.5f, 255u, 145u, 0u },
-                             { -0.5f, -0.5f, 0u, 0u, 255u },  { -0.3f, 0.25f, 255u, 255u, 0u },
-                             { 0.3f, 0.25f, 255u, 145u, 0u }, { 0.0f, -0.75f, 0u, 0u, 255u } };
+    const Vertex vertices[]{
+        { -1.0f, -1.0f, -1.0f }, { 1.0f, -1.0f, -1.0f }, { -1.0f, 1.0f, -1.0f }, { 1.0f, 1.0f, -1.0f },
+        { -1.0f, -1.0f, 1.0f },  { 1.0f, -1.0f, 1.0f },  { -1.0f, 1.0f, 1.0f },  { 1.0f, 1.0f, 1.0f },
+    };
 
-    const uint16_t indices[]{ 0u, 1u, 2u, 0u, 4u, 1u, 1u, 5u, 2u, 0u, 2u, 3u };
+    const uint16_t indices[]{ 0, 2, 1, 2, 3, 1, 1, 3, 5, 3, 7, 5, 2, 6, 3, 3, 6, 7,
+                              4, 5, 7, 4, 7, 6, 0, 4, 2, 2, 4, 6, 0, 1, 4, 1, 5, 4 };
 
     WRL::ComPtr<ID3D11Buffer> p_vertex_buffer{};
 
@@ -266,9 +292,10 @@ auto Graphics::draw_test_triangle(float angle, int x, int y) -> void
     const float xcoord = (x / (Graphics::screen_width / 2.0f) - 1.0f);
     const float ycoord = -(y / (Graphics::screen_height / 2.0f) - 1.0f);
 
-    const ConstBuffer cb{ DX::XMMatrixTranspose(DX::XMMatrixRotationZ(angle)
-                                                * DX::XMMatrixScaling(9.0f / 16.0f, 1.0f, 1.0f)
-                                                * DX::XMMatrixTranslation(xcoord, ycoord, 0.0f)) };
+    const auto ar = (float)Graphics::screen_height / (float)Graphics::screen_width;
+    const ConstBuffer cb{ DX::XMMatrixTranspose(DX::XMMatrixRotationZ(angle) * DX::XMMatrixRotationX(angle)
+                                                * DX::XMMatrixTranslation(xcoord, ycoord, 4.0f)
+                                                * DX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 10.0f)) };
 
     WRL::ComPtr<ID3D11Buffer> p_const_buffer{};
     D3D11_BUFFER_DESC cbd{};
@@ -286,6 +313,41 @@ auto Graphics::draw_test_triangle(float angle, int x, int y) -> void
 
     p_context->VSSetConstantBuffers(0u, 1u, p_const_buffer.GetAddressOf());
 
+    struct ConstBuffer2
+    {
+        struct
+        {
+            float r;
+            float g;
+            float b;
+            float a;
+        } face_colors[6];
+    };
+    const ConstBuffer2 cb2 = { {
+        { 1.0f, 0.0f, 1.0f },
+        { 1.0f, 0.0f, 0.0f },
+        { 0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 1.0f },
+        { 1.0f, 1.0f, 0.0f },
+        { 0.0f, 1.0f, 1.0f },
+    } };
+
+    WRL::ComPtr<ID3D11Buffer> p_const_buffer2{};
+    D3D11_BUFFER_DESC cbd2{};
+    cbd2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    cbd2.Usage = D3D11_USAGE_DEFAULT;
+    cbd2.CPUAccessFlags = 0u;
+    cbd2.MiscFlags = 0u;
+    cbd2.ByteWidth = sizeof(cb2);
+    cbd2.StructureByteStride = 0u;
+
+    D3D11_SUBRESOURCE_DATA data3{};
+    data3.pSysMem = &cb2;
+
+    GFX_THROW_INFO(p_device->CreateBuffer(&cbd2, &data3, &p_const_buffer2));
+
+    p_context->PSSetConstantBuffers(0u, 1u, p_const_buffer2.GetAddressOf());
+
     p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     WRL::ComPtr<ID3D11VertexShader> p_vertex_shader{};
@@ -297,8 +359,7 @@ auto Graphics::draw_test_triangle(float angle, int x, int y) -> void
 
     WRL::ComPtr<ID3D11InputLayout> p_input_layout{};
     const D3D11_INPUT_ELEMENT_DESC ied[]{
-        { "POSITION", 0u, DXGI_FORMAT_R32G32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u },
-        { "COLOR", 0u, DXGI_FORMAT_R8G8B8A8_UNORM, 0u, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0u },
+        { "POSITION", 0u, DXGI_FORMAT_R32G32B32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u }
     };
     GFX_THROW_INFO(p_device->CreateInputLayout(
         ied, (UINT)std::size(ied), p_blob->GetBufferPointer(), p_blob->GetBufferSize(), &p_input_layout));
