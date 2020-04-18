@@ -16,19 +16,19 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{3715f1a8-3bf6-4a71-adf5-3d3b78e858c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Macros">
+      <UniqueIdentifier>{0971aebd-9417-4571-b977-b82c4a4ad873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{a51959cb-53f2-4b34-b78f-5f5477618054}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
     <None Include=".clang-tidy" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Helpers.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MikastivException.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WinDefines.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Window.hpp">
@@ -52,14 +52,20 @@
     <ClInclude Include="DXGIInfoManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MikastivTimer.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="WindowMacros.hpp">
+      <Filter>Header Files\Macros</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsMacros.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Macros</Filter>
     </ClInclude>
-    <ClInclude Include="WindowMacros.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Helpers.hpp">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="WinDefines.hpp">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MikastivTimer.hpp">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

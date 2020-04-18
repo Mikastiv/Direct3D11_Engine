@@ -15,6 +15,7 @@ public:
     {
         using MikastivException::MikastivException;
     };
+
     class HrException : public Exception
     {
     public:

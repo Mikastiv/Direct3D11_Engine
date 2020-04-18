@@ -89,7 +89,7 @@ Graphics::DeviceRemovedException::DeviceRemovedException(int line,
                                                          const char* file,
                                                          HRESULT hr,
                                                          std::vector<std::string> info_msgs) noexcept
-    : HrException(line, file, hr, info_msgs)
+    : HrException(line, file, hr, std::move(info_msgs))
 {
 }
 
@@ -141,7 +141,7 @@ Graphics::Graphics(HWND h_wnd)
     GFX_THROW_INFO(p_device->CreateRenderTargetView(p_back_buffer.Get(), nullptr, &p_target));
 
     D3D11_DEPTH_STENCIL_DESC ds_desc{};
-    ds_desc.DepthEnable = true;
+    ds_desc.DepthEnable = TRUE;
     ds_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     ds_desc.DepthFunc = D3D11_COMPARISON_LESS;
     WRL::ComPtr<ID3D11DepthStencilState> p_dss_state{};
@@ -182,10 +182,7 @@ auto Graphics::end_frame() -> void
         {
             throw GFX_DEVICE_REMOVED_EXCEPT(p_device->GetDeviceRemovedReason());
         }
-        else
-        {
-            throw GFX_EXCEPT(hr);
-        }
+        throw GFX_EXCEPT(hr);
     }
 }
 
