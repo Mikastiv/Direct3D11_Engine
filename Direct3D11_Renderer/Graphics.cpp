@@ -167,8 +167,6 @@ Graphics::Graphics(HWND h_wnd)
     desc_ds_view.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     desc_ds_view.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(p_device->CreateDepthStencilView(p_depth_stencil.Get(), &desc_ds_view, &p_dsv));
-
-    p_context->OMSetRenderTargets(1u, p_target.GetAddressOf(), p_dsv.Get());
 }
 
 auto Graphics::end_frame() -> void
@@ -344,6 +342,8 @@ auto Graphics::draw_test_triangle(float angle, int x, int y) -> void
     D3D11_VIEWPORT vp[]{ { 0.0f, 0.0f, (FLOAT)screen_width, (FLOAT)screen_height, 0.0f, 1.0f } };
 
     p_context->RSSetViewports(1u, &vp[0]);
+
+    p_context->OMSetRenderTargets(1u, p_target.GetAddressOf(), p_dsv.Get());
     GFX_THROW_INFO_ONLY(p_context->DrawIndexed((UINT)std::size(indices), 0u, 0u));
 }
 
