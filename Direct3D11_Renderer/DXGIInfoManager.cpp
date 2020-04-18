@@ -1,13 +1,11 @@
 #include "DXGIInfoManager.hpp"
 #include "Window.hpp"
+#include "GraphicsMacros.hpp"
+#include "WindowMacros.hpp"
 
 #include <dxgidebug.h>
 
 #pragma comment(lib, "dxguid.lib")
-
-#define GFX_THROW_NOINFO(hrcall)                                                                                       \
-    if (FAILED(hr = (hrcall)))                                                                                         \
-    throw Graphics::HrException(__LINE__, __FILE__, hr)
 
 DXGIInfoManager::DXGIInfoManager()
 {

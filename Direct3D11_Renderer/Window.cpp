@@ -1,5 +1,6 @@
 #include "Window.hpp"
 #include "Helpers.hpp"
+#include "WindowMacros.hpp"
 #include "resource.h"
 
 #include <sstream>

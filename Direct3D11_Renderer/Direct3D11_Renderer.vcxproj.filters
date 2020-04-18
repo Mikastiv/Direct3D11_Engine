@@ -55,6 +55,12 @@
     <ClInclude Include="MikastivTimer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsMacros.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowMacros.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MikastivException.cpp">

@@ -96,6 +96,7 @@
     <ClInclude Include="App.hpp" />
     <ClInclude Include="DXGIInfoManager.hpp" />
     <ClInclude Include="Graphics.hpp" />
+    <ClInclude Include="GraphicsMacros.hpp" />
     <ClInclude Include="Helpers.hpp" />
     <ClInclude Include="Keyboard.hpp" />
     <ClInclude Include="MikastivException.hpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="WinDefines.hpp" />
     <ClInclude Include="Window.hpp" />
+    <ClInclude Include="WindowMacros.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />

@@ -1,5 +1,6 @@
 #include "Graphics.hpp"
 #include "Helpers.hpp"
+#include "GraphicsMacros.hpp"
 
 #include <sstream>
 #include <d3dcompiler.h>
@@ -10,37 +11,6 @@ namespace DX = DirectX;
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
-
-#define GFX_EXCEPT_NOINFO(hr) Graphics::HrException(__LINE__, __FILE__, hr)
-
-#define GFX_THROW_NOINFO(hrcall)                                                                                       \
-    if (FAILED(hr = (hrcall)))                                                                                         \
-    throw Graphics::HrException(__LINE__, __FILE__, hr)
-
-#ifdef _DEBUG
-#define GFX_EXCEPT(hr) Graphics::HrException(__LINE__, __FILE__, hr, info_manager.get_messages())
-#define GFX_THROW_INFO(hrcall)                                                                                         \
-    info_manager.set();                                                                                                \
-    if (FAILED(hr = (hrcall)))                                                                                         \
-    throw GFX_EXCEPT(hr)
-#define GFX_DEVICE_REMOVED_EXCEPT(hr)                                                                                  \
-    Graphics::DeviceRemovedException(__LINE__, __FILE__, hr, info_manager.get_messages())
-#define GFX_THROW_INFO_ONLY(fn_call)                                                                                   \
-    info_manager.set();                                                                                                \
-    fn_call;                                                                                                           \
-    {                                                                                                                  \
-        auto v = info_manager.get_messages();                                                                          \
-        if (!v.empty())                                                                                                \
-        {                                                                                                              \
-            throw Graphics::InfoException(__LINE__, __FILE__, v);                                                      \
-        }                                                                                                              \
-    }
-#else
-#define GFX_EXCEPT(hr) Graphics::HrException(__LINE__, __FILE__, hr)
-#define GFX_THROW_INFO(hrcall) GFX_THROW_NOINFO(hrcall)
-#define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException(__LINE__, __FILE__, hr)
-#define GFX_THROW_INFO_ONLY(fn_call) fn_call
-#endif
 
 Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::vector<std::string> info_msgs) noexcept
     : Exception(line, file)
@@ -370,8 +340,6 @@ auto Graphics::draw_test_triangle(float angle, int x, int y) -> void
     GFX_THROW_INFO(
         p_device->CreatePixelShader(p_blob->GetBufferPointer(), p_blob->GetBufferSize(), nullptr, &p_pixel_shader));
     p_context->PSSetShader(p_pixel_shader.Get(), nullptr, 0u);
-
-    p_context->OMSetRenderTargets(1u, p_target.GetAddressOf(), nullptr);
 
     D3D11_VIEWPORT vp[]{ { 0.0f, 0.0f, (FLOAT)screen_width, (FLOAT)screen_height, 0.0f, 1.0f } };
 
