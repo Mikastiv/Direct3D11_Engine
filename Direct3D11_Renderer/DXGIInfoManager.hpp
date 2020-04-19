@@ -16,10 +16,10 @@ public:
     ~DXGIInfoManager() = default;
     auto operator=(const DXGIInfoManager&) -> DXGIInfoManager& = delete;
     auto operator=(DXGIInfoManager &&) -> DXGIInfoManager& = delete;
-    auto set() noexcept -> void;
-    auto get_messages() const -> std::vector<std::string>;
+    auto Set() noexcept -> void;
+    auto GetMessages() const -> std::vector<std::string>;
 
 private:
     uint64_t next = 0u;
-    Microsoft::WRL::ComPtr<IDXGIInfoQueue> p_dxgi_info_queue{};
+    Microsoft::WRL::ComPtr<IDXGIInfoQueue> pDXGIInfoQueue{};
 };

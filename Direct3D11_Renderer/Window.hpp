@@ -15,8 +15,8 @@ private:
     class WindowClass
     {
     public:
-        static auto get_name() noexcept -> const wchar_t*;
-        static auto get_instance() noexcept -> HINSTANCE;
+        static auto GetName() noexcept -> const wchar_t*;
+        static auto GetInstance() noexcept -> HINSTANCE;
 
     public:
         WindowClass(const WindowClass&) = delete;
@@ -29,11 +29,11 @@ private:
         ~WindowClass();
 
     private:
-        static WindowClass wnd_class;
-        static constexpr const wchar_t* wnd_class_name = L"Direct3D11 Engine Window";
+        static WindowClass wndClass;
+        static constexpr const wchar_t* WndClassName = L"Direct3D11 Engine Window";
 
     private:
-        HINSTANCE h_instance{};
+        HINSTANCE hInstance{};
     };
 
 public:
@@ -45,9 +45,9 @@ public:
     public:
         Exception(int line, const char* file, HRESULT hr) noexcept;
         auto what() const noexcept -> const char* override;
-        auto get_type() const noexcept -> const char* override;
-        auto get_error_code() const noexcept -> HRESULT;
-        auto get_error_description() const noexcept -> std::string;
+        auto GetType() const noexcept -> const char* override;
+        auto GetErrorCode() const noexcept -> HRESULT;
+        auto GetErrorDescription() const noexcept -> std::string;
 
     private:
         HRESULT hr{};
@@ -57,16 +57,16 @@ public:
     {
     public:
         NoGfxException(int line, const char* file) noexcept;
-        auto get_type() const noexcept -> const char* override;
+        auto GetType() const noexcept -> const char* override;
     };
 
 public:
     Keyboard kbd{};
     Mouse mouse{};
-    std::unique_ptr<Graphics> p_gfx{};
+    std::unique_ptr<Graphics> pGfx{};
 
 public:
-    static auto process_messages() noexcept -> std::optional<int>;
+    static auto ProcessMessages() noexcept -> std::optional<int>;
 
 public:
     Window(int width, int height, const wchar_t* name);
@@ -75,20 +75,20 @@ public:
     ~Window();
     auto operator=(const Window&) -> Window& = delete;
     auto operator=(Window &&) -> Window& = delete;
-    auto set_title(const std::wstring& title) -> void;
-    auto create_gfx() -> void;
-    auto has_gfx() const -> bool;
-    auto gfx() -> Graphics&;
+    auto SetTitle(const std::wstring& title) -> void;
+    auto CreateGfx() -> void;
+    auto HasGfx() const -> bool;
+    auto GetGfx() -> Graphics&;
 
 private:
-    static auto CALLBACK handle_msg_setup(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
-    static auto CALLBACK handle_msg_thunk(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
+    static auto CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept -> LRESULT;
+    static auto CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept -> LRESULT;
 
 private:
-    auto handle_msg(HWND h_wnd, UINT msg, WPARAM w_param, LPARAM l_param) noexcept -> LRESULT;
+    auto HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept -> LRESULT;
 
 private:
     int width = 0;
     int height = 0;
-    HWND h_wnd{};
+    HWND hWnd{};
 };

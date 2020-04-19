@@ -1,30 +1,30 @@
 #include "App.hpp"
 
 App::App()
-    : wnd(Graphics::screen_width, Graphics::screen_height, window_title)
+    : wnd(Graphics::ScreenWidth, Graphics::ScreenHeight, windowTitle)
 {
 }
 
-auto App::do_frame() -> void
+auto App::DoFrame() -> void
 {
-    wnd.gfx().clear_buffer(0.0f, 0.0f, 0.0f);
-    wnd.gfx().draw_test_triangle(ft.peek(), wnd.mouse.get_pos_x(), wnd.mouse.get_pos_y());
-    wnd.gfx().end_frame();
+    wnd.GetGfx().ClearBuffer(0.0f, 0.0f, 0.0f);
+    wnd.GetGfx().DrawTestTriangle(ft.Peek(), wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
+    wnd.GetGfx().EndFrame();
 }
 
-auto App::start() -> int
+auto App::Start() -> int
 {
-    if (!wnd.has_gfx())
+    if (!wnd.HasGfx())
     {
-        wnd.create_gfx();
+        wnd.CreateGfx();
     }
 
     while (true)
     {
-        if (const auto code = Window::process_messages())
+        if (const auto code = Window::ProcessMessages())
         {
             return code.value();
         }
-        do_frame();
+        DoFrame();
     }
 }

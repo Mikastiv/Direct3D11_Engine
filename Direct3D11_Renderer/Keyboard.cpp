@@ -7,83 +7,83 @@ Keyboard::Event::Event(Type type, unsigned char code) noexcept
 {
 }
 
-auto Keyboard::Event::is_press() const noexcept -> bool
+auto Keyboard::Event::IsPress() const noexcept -> bool
 {
     return type == Type::Press;
 }
 
-auto Keyboard::Event::is_release() const noexcept -> bool
+auto Keyboard::Event::IsRelease() const noexcept -> bool
 {
     return type == Type::Release;
 }
 
-auto Keyboard::Event::get_code() const noexcept -> unsigned char
+auto Keyboard::Event::GetCode() const noexcept -> unsigned char
 {
     return code;
 }
 
 template <typename T>
-auto Keyboard::trim_buffer(std::queue<T>& buffer) noexcept -> void
+auto Keyboard::TrimBuffer(std::queue<T>& buffer) noexcept -> void
 {
-    while (buffer.size() > buffer_size)
+    while (buffer.size() > bufferSize)
     {
         buffer.pop();
     }
 }
 
-auto Keyboard::on_key_press(unsigned char keycode) noexcept -> void
+auto Keyboard::OnKeyPress(unsigned char keycode) noexcept -> void
 {
-    keystates[keycode] = true;
-    keybuffer.emplace(Event::Type::Press, keycode);
-    trim_buffer(keybuffer);
+    keyStates[keycode] = true;
+    keyBuffer.emplace(Event::Type::Press, keycode);
+    TrimBuffer(keyBuffer);
 }
 
-auto Keyboard::on_key_release(unsigned char keycode) noexcept -> void
+auto Keyboard::OnKeyRelease(unsigned char keycode) noexcept -> void
 {
-    keystates[keycode] = false;
-    keybuffer.emplace(Event::Type::Release, keycode);
-    trim_buffer(keybuffer);
+    keyStates[keycode] = false;
+    keyBuffer.emplace(Event::Type::Release, keycode);
+    TrimBuffer(keyBuffer);
 }
 
-auto Keyboard::on_char(char character) noexcept -> void
+auto Keyboard::OnChar(char character) noexcept -> void
 {
     charbuffer.push(character);
-    trim_buffer(charbuffer);
+    TrimBuffer(charbuffer);
 }
 
-auto Keyboard::clear_keystates() noexcept -> void
+auto Keyboard::ClearKeystates() noexcept -> void
 {
-    keystates.reset();
+    keyStates.reset();
 }
 
-auto Keyboard::key_is_pressed(unsigned char keycode) const noexcept -> bool
+auto Keyboard::KeyIsPressed(unsigned char keycode) const noexcept -> bool
 {
-    return keystates[keycode];
+    return keyStates[keycode];
 }
 
-auto Keyboard::read_key() noexcept -> std::optional<Event>
+auto Keyboard::ReadKey() noexcept -> std::optional<Event>
 {
-    if (keybuffer.empty())
+    if (keyBuffer.empty())
     {
         return {};
     }
 
-    Event e{ keybuffer.front() };
-    keybuffer.pop();
+    Event e{ keyBuffer.front() };
+    keyBuffer.pop();
     return e;
 }
 
-auto Keyboard::key_queue_is_empty() const noexcept -> bool
+auto Keyboard::KeyQueueIsEmpty() const noexcept -> bool
 {
-    return keybuffer.empty();
+    return keyBuffer.empty();
 }
 
-auto Keyboard::clear_key_queue() noexcept -> void
+auto Keyboard::ClearKeyQueue() noexcept -> void
 {
-    keybuffer = std::queue<Event>{};
+    keyBuffer = std::queue<Event>{};
 }
 
-auto Keyboard::read_char() noexcept -> std::optional<unsigned char>
+auto Keyboard::ReadChar() noexcept -> std::optional<unsigned char>
 {
     if (charbuffer.empty())
     {
@@ -95,33 +95,33 @@ auto Keyboard::read_char() noexcept -> std::optional<unsigned char>
     return character;
 }
 
-auto Keyboard::char_queue_is_empty() const noexcept -> bool
+auto Keyboard::CharQueueIsEmpty() const noexcept -> bool
 {
     return charbuffer.empty();
 }
 
-auto Keyboard::clear_char_queue() noexcept -> void
+auto Keyboard::ClearCharQueue() noexcept -> void
 {
     charbuffer = std::queue<unsigned char>{};
 }
 
-auto Keyboard::clear_queues() noexcept -> void
+auto Keyboard::ClearQueues() noexcept -> void
 {
-    clear_key_queue();
-    clear_char_queue();
+    ClearKeyQueue();
+    ClearCharQueue();
 }
 
-auto Keyboard::enable_autorepeat() noexcept -> void
+auto Keyboard::EnableAutorepeat() noexcept -> void
 {
-    autorepeat_enabled = true;
+    autorepeatEnabled = true;
 }
 
-auto Keyboard::disable_autorepeat() noexcept -> void
+auto Keyboard::DisableAutorepeat() noexcept -> void
 {
-    autorepeat_enabled = false;
+    autorepeatEnabled = false;
 }
 
-auto Keyboard::autorepeat_is_enabled() const noexcept -> bool
+auto Keyboard::AutorepeatIsEnabled() const noexcept -> bool
 {
     return false;
 }

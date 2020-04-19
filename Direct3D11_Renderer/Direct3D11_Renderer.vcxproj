@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp" />
+    <ClInclude Include="Bindable.hpp" />
     <ClInclude Include="DXGIInfoManager.hpp" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="GraphicsMacros.hpp" />
@@ -103,17 +104,20 @@
     <ClInclude Include="MikastivTimer.hpp" />
     <ClInclude Include="Mouse.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="VertexBuffer.hpp" />
     <ClInclude Include="WinDefines.hpp" />
     <ClInclude Include="Window.hpp" />
     <ClInclude Include="WindowMacros.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Bindable.cpp" />
     <ClCompile Include="DXGIInfoManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="MikastivException.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>

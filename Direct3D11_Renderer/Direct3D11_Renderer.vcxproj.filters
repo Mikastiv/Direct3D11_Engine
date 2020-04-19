@@ -22,6 +22,12 @@
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{a51959cb-53f2-4b34-b78f-5f5477618054}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Bindable">
+      <UniqueIdentifier>{42ba7a03-6824-413a-9bff-0842c82f1922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Bindable">
+      <UniqueIdentifier>{c1cabc8a-5d15-40da-b519-1bedd3c0ce88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
@@ -67,6 +73,12 @@
     <ClInclude Include="MikastivTimer.hpp">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Bindable.hpp">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.hpp">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MikastivException.cpp">
@@ -91,6 +103,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DXGIInfoManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bindable.cpp">
+      <Filter>Source Files\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

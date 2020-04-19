@@ -12,16 +12,16 @@ auto CALLBACK WinMain([[maybe_unused]] HINSTANCE hInstance,
 
     try
     {
-        return App{}.start();
+        return App{}.Start();
     }
     catch (const MikastivException& e)
     {
         MessageBox(
-            nullptr, char_to_wstr(e.what()).c_str(), char_to_wstr(e.get_type()).c_str(), MB_OK | MB_ICONEXCLAMATION);
+            nullptr, CharToWString(e.what()).c_str(), CharToWString(e.GetType()).c_str(), MB_OK | MB_ICONEXCLAMATION);
     }
     catch (const std::exception& e)
     {
-        MessageBox(nullptr, char_to_wstr(e.what()).c_str(), L"Standard Exception", MB_OK | MB_ICONEXCLAMATION);
+        MessageBox(nullptr, CharToWString(e.what()).c_str(), L"Standard Exception", MB_OK | MB_ICONEXCLAMATION);
     }
     catch (...)
     {

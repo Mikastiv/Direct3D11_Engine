@@ -7,13 +7,13 @@ class App
 {
 public:
     App();
-    auto start() -> int;
+    auto Start() -> int;
 
 private:
-    auto do_frame() -> void;
+    auto DoFrame() -> void;
 
 private:
-    static constexpr const wchar_t* window_title = L"Direct3D 11 Engine";
+    static constexpr const wchar_t* windowTitle = L"Direct3D 11 Engine";
 
 private:
     Window wnd;

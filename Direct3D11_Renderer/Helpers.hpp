@@ -3,30 +3,30 @@
 #include <string>
 #include <cassert>
 
-inline auto char_to_wstr(const char* c) -> std::wstring
+inline auto CharToWString(const char* c) -> std::wstring
 {
-    size_t output_size = strlen(c);
-    std::wstring wstr(output_size, L'#');
+    size_t outputSize = strlen(c);
+    std::wstring wstr(outputSize, L'#');
 
-    size_t char_converted{};
-    const errno_t err_no = mbstowcs_s(&char_converted, wstr.data(), wstr.size() + 1, c, output_size);
+    size_t charConverted{};
+    const errno_t errNo = mbstowcs_s(&charConverted, wstr.data(), wstr.size() + 1, c, outputSize);
 
-    assert(err_no == 0);
-    assert(char_converted == wstr.size() + 1);
+    assert(errNo == 0);
+    assert(charConverted == wstr.size() + 1);
 
     return wstr;
 }
 
-inline auto wchar_to_str(const wchar_t* wc) -> std::string
+inline auto WCharToString(const wchar_t* wc) -> std::string
 {
-    size_t output_size = wcslen(wc);
-    std::string str(output_size, '#');
+    size_t outputSize = wcslen(wc);
+    std::string str(outputSize, '#');
 
-    size_t char_converted{};
-    const errno_t err_no = wcstombs_s(&char_converted, str.data(), str.size() + 1, wc, output_size);
+    size_t charConverted{};
+    const errno_t errNo = wcstombs_s(&charConverted, str.data(), str.size() + 1, wc, outputSize);
 
-    assert(err_no == 0);
-    assert(char_converted == str.size() + 1);
+    assert(errNo == 0);
+    assert(charConverted == str.size() + 1);
 
     return str;
 }

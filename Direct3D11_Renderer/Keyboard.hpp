@@ -20,9 +20,9 @@ public:
 
     public:
         Event(Type type, unsigned char code) noexcept;
-        auto is_press() const noexcept -> bool;
-        auto is_release() const noexcept -> bool;
-        auto get_code() const noexcept -> unsigned char;
+        auto IsPress() const noexcept -> bool;
+        auto IsRelease() const noexcept -> bool;
+        auto GetCode() const noexcept -> unsigned char;
 
     private:
         Type type{};
@@ -37,39 +37,39 @@ public:
     auto operator=(const Keyboard&) -> Keyboard& = delete;
     auto operator=(Keyboard &&) -> Keyboard& = delete;
 
-    auto key_is_pressed(unsigned char keycode) const noexcept -> bool;
+    auto KeyIsPressed(unsigned char keycode) const noexcept -> bool;
     // Read a key event from the queue
-    auto read_key() noexcept -> std::optional<Event>;
-    auto key_queue_is_empty() const noexcept -> bool;
-    auto clear_key_queue() noexcept -> void;
+    auto ReadKey() noexcept -> std::optional<Event>;
+    auto KeyQueueIsEmpty() const noexcept -> bool;
+    auto ClearKeyQueue() noexcept -> void;
 
     // Read a char from the queue
-    auto read_char() noexcept -> std::optional<unsigned char>;
-    auto char_queue_is_empty() const noexcept -> bool;
-    auto clear_char_queue() noexcept -> void;
+    auto ReadChar() noexcept -> std::optional<unsigned char>;
+    auto CharQueueIsEmpty() const noexcept -> bool;
+    auto ClearCharQueue() noexcept -> void;
 
     // Clear key queue and char queue
-    auto clear_queues() noexcept -> void;
+    auto ClearQueues() noexcept -> void;
 
-    auto enable_autorepeat() noexcept -> void;
-    auto disable_autorepeat() noexcept -> void;
-    auto autorepeat_is_enabled() const noexcept -> bool;
+    auto EnableAutorepeat() noexcept -> void;
+    auto DisableAutorepeat() noexcept -> void;
+    auto AutorepeatIsEnabled() const noexcept -> bool;
 
 private:
     template <typename T>
-    auto trim_buffer(std::queue<T>& buffer) noexcept -> void;
-    auto on_key_press(unsigned char keycode) noexcept -> void;
-    auto on_key_release(unsigned char keycode) noexcept -> void;
-    auto on_char(char character) noexcept -> void;
-    auto clear_keystates() noexcept -> void;
+    auto TrimBuffer(std::queue<T>& buffer) noexcept -> void;
+    auto OnKeyPress(unsigned char keycode) noexcept -> void;
+    auto OnKeyRelease(unsigned char keycode) noexcept -> void;
+    auto OnChar(char character) noexcept -> void;
+    auto ClearKeystates() noexcept -> void;
 
 private:
-    static constexpr unsigned int n_keys = 256u;
-    static constexpr unsigned int buffer_size = 16u;
+    static constexpr unsigned int nKeys = 256u;
+    static constexpr unsigned int bufferSize = 16u;
 
 private:
-    bool autorepeat_enabled = false;
-    std::bitset<n_keys> keystates{};
-    std::queue<Event> keybuffer{};
+    bool autorepeatEnabled = false;
+    std::bitset<nKeys> keyStates{};
+    std::queue<Event> keyBuffer{};
     std::queue<unsigned char> charbuffer{};
 };

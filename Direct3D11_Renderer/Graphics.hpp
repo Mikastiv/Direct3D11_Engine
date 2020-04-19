@@ -10,6 +10,8 @@
 
 class Graphics
 {
+    friend class Bindable;
+
 public:
     class Exception : public MikastivException
     {
@@ -19,12 +21,12 @@ public:
     class HrException : public Exception
     {
     public:
-        HrException(int line, const char* file, HRESULT hr, std::vector<std::string> info_msgs = {}) noexcept;
+        HrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs = {}) noexcept;
         auto what() const noexcept -> const char* override;
-        auto get_type() const noexcept -> const char* override;
-        auto get_error_code() const noexcept -> HRESULT;
-        auto get_error_description() const noexcept -> std::string;
-        auto get_error_info() const noexcept -> std::string;
+        auto GetType() const noexcept -> const char* override;
+        auto GetErrorCode() const noexcept -> HRESULT;
+        auto GetErrorDescription() const noexcept -> std::string;
+        auto GetErrorInfo() const noexcept -> std::string;
 
     private:
         HRESULT hr{};
@@ -34,10 +36,10 @@ public:
     class InfoException : public Exception
     {
     public:
-        InfoException(int line, const char* file, std::vector<std::string> info_msgs) noexcept;
+        InfoException(int line, const char* file, std::vector<std::string> infoMsgs) noexcept;
         auto what() const noexcept -> const char* override;
-        auto get_type() const noexcept -> const char* override;
-        auto get_error_info() const noexcept -> std::string;
+        auto GetType() const noexcept -> const char* override;
+        auto GetErrorInfo() const noexcept -> std::string;
 
     private:
         std::string info{};
@@ -49,32 +51,32 @@ public:
         DeviceRemovedException(int line,
                                const char* file,
                                HRESULT hr,
-                               std::vector<std::string> info_msgs = {}) noexcept;
-        auto get_type() const noexcept -> const char* override;
+                               std::vector<std::string> infoMsgs = {}) noexcept;
+        auto GetType() const noexcept -> const char* override;
     };
 
 public:
-    explicit Graphics(HWND h_wnd);
+    explicit Graphics(HWND hWnd);
     Graphics(const Graphics&) = delete;
     Graphics(Graphics&&) = delete;
     ~Graphics() = default;
     auto operator=(const Graphics&) -> Graphics& = delete;
     auto operator=(Graphics &&) -> Graphics& = delete;
-    auto end_frame() -> void;
-    auto clear_buffer(float red, float green, float blue) noexcept -> void;
-    auto draw_test_triangle(float angle, int x, int y) -> void;
+    auto EndFrame() -> void;
+    auto ClearBuffer(float red, float green, float blue) noexcept -> void;
+    auto DrawTestTriangle(float angle, int x, int y) -> void;
 
 public:
-    static constexpr int screen_width = 1280;
-    static constexpr int screen_height = 720;
+    static constexpr int ScreenWidth = 1280;
+    static constexpr int ScreenHeight = 720;
 
 private:
-#ifdef _DEBUG
-    DXGIInfoManager info_manager{};
+#ifndef NDEBUG
+    DXGIInfoManager infoManager{};
 #endif
-    Microsoft::WRL::ComPtr<ID3D11Device> p_device{};
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> p_context{};
-    Microsoft::WRL::ComPtr<IDXGISwapChain> p_swap{};
-    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target{};
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_dsv{};
+    Microsoft::WRL::ComPtr<ID3D11Device> pDevice{};
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext{};
+    Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap{};
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget{};
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDsv{};
 };

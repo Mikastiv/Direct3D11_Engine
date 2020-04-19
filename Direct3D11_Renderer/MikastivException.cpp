@@ -11,28 +11,28 @@ MikastivException::MikastivException(int line, const char* file) noexcept
 auto MikastivException::what() const noexcept -> const char*
 {
     std::ostringstream oss;
-    oss << get_type() << '\n' << get_origin_string();
-    what_buffer = oss.str();
+    oss << GetType() << '\n' << GetOriginString();
+    whatBuffer = oss.str();
 
-    return what_buffer.c_str();
+    return whatBuffer.c_str();
 }
 
-auto MikastivException::get_type() const noexcept -> const char*
+auto MikastivException::GetType() const noexcept -> const char*
 {
     return "Mikastiv Exception";
 }
 
-auto MikastivException::get_line() const noexcept -> int
+auto MikastivException::GetLine() const noexcept -> int
 {
     return line;
 }
 
-auto MikastivException::get_file() const noexcept -> const std::string&
+auto MikastivException::GetFile() const noexcept -> const std::string&
 {
     return file;
 }
 
-auto MikastivException::get_origin_string() const noexcept -> std::string
+auto MikastivException::GetOriginString() const noexcept -> std::string
 {
     std::ostringstream oss{};
     oss << "[File] " << file << '\n' << "[Line] " << line;
