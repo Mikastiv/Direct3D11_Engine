@@ -66,9 +66,12 @@ Box::Box(Graphics& gfx)
 
 auto Box::Update(float deltaTime) noexcept -> void
 {
+    pitch = dPitch * deltaTime;
+    yaw += dYaw * deltaTime;
+    roll += dRoll * deltaTime;
 }
 
 auto Box::GetTransformXM() const noexcept -> DirectX::XMMATRIX
 {
-    return DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f);
+    return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f);
 }
