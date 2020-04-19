@@ -1,4 +1,5 @@
 #include "Bindable.hpp"
+#include "GraphicsMacros.hpp"
 
 #include <stdexcept>
 

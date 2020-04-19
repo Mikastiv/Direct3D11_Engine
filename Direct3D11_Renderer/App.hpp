@@ -2,11 +2,13 @@
 
 #include "Window.hpp"
 #include "MikastivTimer.hpp"
+#include "Box.hpp"
 
 class App
 {
 public:
     App();
+    ~App() = default;
     auto Start() -> int;
 
 private:
@@ -18,4 +20,5 @@ private:
 private:
     Window wnd;
     Timer ft{};
+    std::vector<std::unique_ptr<Box>> boxes{};
 };

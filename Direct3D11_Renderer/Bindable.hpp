@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Graphics.hpp"
-#include "GraphicsMacros.hpp"
 
 class Bindable
 {

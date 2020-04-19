@@ -3,9 +3,11 @@
 #include "WinDefines.hpp"
 #include "MikastivException.hpp"
 #include "DXGIInfoManager.hpp"
+#include "DebugMacro.hpp"
 
 #include <d3d11.h>
 #include <wrl.h>
+#include <DirectXMath.h>
 #include <vector>
 
 class Graphics
@@ -48,10 +50,7 @@ public:
     class DeviceRemovedException : public HrException
     {
     public:
-        DeviceRemovedException(int line,
-                               const char* file,
-                               HRESULT hr,
-                               std::vector<std::string> infoMsgs = {}) noexcept;
+        DeviceRemovedException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs = {}) noexcept;
         auto GetType() const noexcept -> const char* override;
     };
 
@@ -64,13 +63,16 @@ public:
     auto operator=(Graphics &&) -> Graphics& = delete;
     auto EndFrame() -> void;
     auto ClearBuffer(float red, float green, float blue) noexcept -> void;
-    auto DrawTestTriangle(float angle, int x, int y) -> void;
+    auto DrawIndexed(UINT count) noexcept(!IS_DEBUG) -> void;
+    auto SetProjection(DirectX::FXMMATRIX proj) noexcept -> void;
+    auto GetProjection() const noexcept -> DirectX::XMMATRIX;
 
 public:
     static constexpr int ScreenWidth = 1280;
     static constexpr int ScreenHeight = 720;
 
 private:
+    DirectX::XMMATRIX projection{};
 #ifndef NDEBUG
     DXGIInfoManager infoManager{};
 #endif

@@ -1,4 +1,4 @@
-cbuffer c_buf1
+cbuffer c_buf
 {
     float4 colors[6];
 };

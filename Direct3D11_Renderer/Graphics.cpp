@@ -167,6 +167,9 @@ Graphics::Graphics(HWND hWnd)
     descDSView.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     descDSView.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSView, &pDsv));
+
+    D3D11_VIEWPORT vp[]{ { 0.0f, 0.0f, (FLOAT)ScreenWidth, (FLOAT)ScreenHeight, 0.0f, 1.0f } };
+    pContext->RSSetViewports(1u, &vp[0]);
 }
 
 auto Graphics::EndFrame() -> void
@@ -193,155 +196,20 @@ auto Graphics::ClearBuffer(float red, float green, float blue) noexcept -> void
     pContext->ClearDepthStencilView(pDsv.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
-auto Graphics::DrawTestTriangle(float angle, int x, int y) -> void
+auto Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG) -> void
 {
-    HRESULT hr{};
-
-    struct Vertex
-    {
-        struct
-        {
-            float x;
-            float y;
-            float z;
-        } pos;
-    };
-
-    const Vertex vertices[]{
-        { -1.0f, -1.0f, -1.0f }, { 1.0f, -1.0f, -1.0f }, { -1.0f, 1.0f, -1.0f }, { 1.0f, 1.0f, -1.0f },
-        { -1.0f, -1.0f, 1.0f },  { 1.0f, -1.0f, 1.0f },  { -1.0f, 1.0f, 1.0f },  { 1.0f, 1.0f, 1.0f },
-    };
-
-    const uint16_t indices[]{ 0, 2, 1, 2, 3, 1, 1, 3, 5, 3, 7, 5, 2, 6, 3, 3, 6, 7,
-                              4, 5, 7, 4, 7, 6, 0, 4, 2, 2, 4, 6, 0, 1, 4, 1, 5, 4 };
-
-    WRL::ComPtr<ID3D11Buffer> p_vertex_buffer{};
-
-    D3D11_BUFFER_DESC desc{};
-    desc.ByteWidth = sizeof(vertices);
-    desc.Usage = D3D11_USAGE_DEFAULT;
-    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    desc.CPUAccessFlags = 0u;
-    desc.MiscFlags = 0u;
-    desc.StructureByteStride = sizeof(Vertex);
-
-    D3D11_SUBRESOURCE_DATA data{};
-    data.pSysMem = vertices;
-
-    GFX_THROW_INFO(pDevice->CreateBuffer(&desc, &data, &p_vertex_buffer));
-    const UINT stride = sizeof(Vertex);
-    const UINT offset = 0u;
-    pContext->IASetVertexBuffers(0u, 1u, p_vertex_buffer.GetAddressOf(), &stride, &offset);
-
-    WRL::ComPtr<ID3D11Buffer> p_index_buffer{};
-
-    D3D11_BUFFER_DESC desc1{};
-    desc1.ByteWidth = sizeof(indices);
-    desc1.Usage = D3D11_USAGE_DEFAULT;
-    desc1.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    desc1.CPUAccessFlags = 0u;
-    desc1.MiscFlags = 0u;
-    desc1.StructureByteStride = sizeof(uint16_t);
-
-    D3D11_SUBRESOURCE_DATA data1{};
-    data1.pSysMem = indices;
-
-    GFX_THROW_INFO(pDevice->CreateBuffer(&desc1, &data1, &p_index_buffer));
-    pContext->IASetIndexBuffer(p_index_buffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
-
-    struct ConstBuffer
-    {
-        DX::XMMATRIX transform;
-    };
-
-    const float xcoord = (x / (Graphics::ScreenWidth / 2.0f) - 1.0f);
-    const float ycoord = -(y / (Graphics::ScreenHeight / 2.0f) - 1.0f);
-
-    const auto ar = (float)Graphics::ScreenHeight / (float)Graphics::ScreenWidth;
-    const ConstBuffer cb{ DX::XMMatrixTranspose(DX::XMMatrixRotationZ(angle) * DX::XMMatrixRotationX(angle)
-                                                * DX::XMMatrixTranslation(xcoord, ycoord, 4.0f)
-                                                * DX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 10.0f)) };
-
-    WRL::ComPtr<ID3D11Buffer> p_const_buffer{};
-    D3D11_BUFFER_DESC cbd{};
-    cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    cbd.Usage = D3D11_USAGE_DYNAMIC;
-    cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    cbd.MiscFlags = 0u;
-    cbd.ByteWidth = sizeof(cb);
-    cbd.StructureByteStride = 0u;
-
-    D3D11_SUBRESOURCE_DATA data2{};
-    data2.pSysMem = &cb;
-
-    GFX_THROW_INFO(pDevice->CreateBuffer(&cbd, &data2, &p_const_buffer));
-
-    pContext->VSSetConstantBuffers(0u, 1u, p_const_buffer.GetAddressOf());
-
-    struct ConstBuffer2
-    {
-        struct
-        {
-            float r;
-            float g;
-            float b;
-            float a;
-        } face_colors[6];
-    };
-    const ConstBuffer2 cb2 = { {
-        { 1.0f, 0.0f, 1.0f },
-        { 1.0f, 0.0f, 0.0f },
-        { 0.0f, 1.0f, 0.0f },
-        { 0.0f, 0.0f, 1.0f },
-        { 1.0f, 1.0f, 0.0f },
-        { 0.0f, 1.0f, 1.0f },
-    } };
-
-    WRL::ComPtr<ID3D11Buffer> p_const_buffer2{};
-    D3D11_BUFFER_DESC cbd2{};
-    cbd2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    cbd2.Usage = D3D11_USAGE_DEFAULT;
-    cbd2.CPUAccessFlags = 0u;
-    cbd2.MiscFlags = 0u;
-    cbd2.ByteWidth = sizeof(cb2);
-    cbd2.StructureByteStride = 0u;
-
-    D3D11_SUBRESOURCE_DATA data3{};
-    data3.pSysMem = &cb2;
-
-    GFX_THROW_INFO(pDevice->CreateBuffer(&cbd2, &data3, &p_const_buffer2));
-
-    pContext->PSSetConstantBuffers(0u, 1u, p_const_buffer2.GetAddressOf());
-
-    pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    WRL::ComPtr<ID3D11VertexShader> p_vertex_shader{};
-    WRL::ComPtr<ID3DBlob> p_blob{};
-    GFX_THROW_INFO(D3DReadFileToBlob(L"VertexShader.cso", &p_blob));
-    GFX_THROW_INFO(
-        pDevice->CreateVertexShader(p_blob->GetBufferPointer(), p_blob->GetBufferSize(), nullptr, &p_vertex_shader));
-    pContext->VSSetShader(p_vertex_shader.Get(), nullptr, 0u);
-
-    WRL::ComPtr<ID3D11InputLayout> p_input_layout{};
-    const D3D11_INPUT_ELEMENT_DESC ied[]{
-        { "POSITION", 0u, DXGI_FORMAT_R32G32B32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u }
-    };
-    GFX_THROW_INFO(pDevice->CreateInputLayout(
-        ied, (UINT)std::size(ied), p_blob->GetBufferPointer(), p_blob->GetBufferSize(), &p_input_layout));
-    pContext->IASetInputLayout(p_input_layout.Get());
-
-    WRL::ComPtr<ID3D11PixelShader> p_pixel_shader{};
-    GFX_THROW_INFO(D3DReadFileToBlob(L"PixelShader.cso", &p_blob));
-    GFX_THROW_INFO(
-        pDevice->CreatePixelShader(p_blob->GetBufferPointer(), p_blob->GetBufferSize(), nullptr, &p_pixel_shader));
-    pContext->PSSetShader(p_pixel_shader.Get(), nullptr, 0u);
-
-    D3D11_VIEWPORT vp[]{ { 0.0f, 0.0f, (FLOAT)ScreenWidth, (FLOAT)ScreenHeight, 0.0f, 1.0f } };
-
-    pContext->RSSetViewports(1u, &vp[0]);
-
     pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDsv.Get());
-    GFX_THROW_INFO_ONLY(pContext->DrawIndexed((UINT)std::size(indices), 0u, 0u));
+    GFX_THROW_INFO_ONLY(pContext->DrawIndexed(count, 0u, 0u));
+}
+
+auto Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept -> void
+{
+    projection = proj;
+}
+
+auto Graphics::GetProjection() const noexcept -> DirectX::XMMATRIX
+{
+    return projection;
 }
 
 Graphics::InfoException::InfoException(int line, const char* file, std::vector<std::string> infoMsgs) noexcept

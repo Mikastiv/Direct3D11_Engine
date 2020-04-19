@@ -95,16 +95,27 @@
   <ItemGroup>
     <ClInclude Include="App.hpp" />
     <ClInclude Include="Bindable.hpp" />
+    <ClInclude Include="BindableBase.hpp" />
+    <ClInclude Include="Box.hpp" />
+    <ClInclude Include="ConstantBuffers.hpp" />
+    <ClInclude Include="DebugMacro.hpp" />
+    <ClInclude Include="Drawable.hpp" />
     <ClInclude Include="DXGIInfoManager.hpp" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="GraphicsMacros.hpp" />
     <ClInclude Include="Helpers.hpp" />
+    <ClInclude Include="IndexBuffer.hpp" />
+    <ClInclude Include="InputLayout.hpp" />
     <ClInclude Include="Keyboard.hpp" />
     <ClInclude Include="MikastivException.hpp" />
     <ClInclude Include="MikastivTimer.hpp" />
     <ClInclude Include="Mouse.hpp" />
+    <ClInclude Include="PixelShader.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Topology.hpp" />
+    <ClInclude Include="TransformConstBuffer.hpp" />
     <ClInclude Include="VertexBuffer.hpp" />
+    <ClInclude Include="VertexShader.hpp" />
     <ClInclude Include="WinDefines.hpp" />
     <ClInclude Include="Window.hpp" />
     <ClInclude Include="WindowMacros.hpp" />
@@ -112,12 +123,20 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Bindable.cpp" />
+    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DXGIInfoManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="MikastivException.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="Topology.cpp" />
+    <ClCompile Include="TransformConstBuffer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
