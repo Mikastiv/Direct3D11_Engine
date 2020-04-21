@@ -100,6 +100,7 @@
     <ClInclude Include="ConstantBuffers.hpp" />
     <ClInclude Include="DebugMacro.hpp" />
     <ClInclude Include="Drawable.hpp" />
+    <ClInclude Include="DrawableBase.hpp" />
     <ClInclude Include="DXGIInfoManager.hpp" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="GraphicsMacros.hpp" />

@@ -7,7 +7,8 @@ App::App()
     {
         wnd.CreateGfx();
     }
-    boxes.push_back(std::make_unique<Box>(wnd.GetGfx()));
+    boxes.push_back(std::make_unique<Box>(wnd.GetGfx(), -1.5f));
+    boxes.push_back(std::make_unique<Box>(wnd.GetGfx(), 1.5f));
     const auto ar = (float)Graphics::ScreenHeight / (float)Graphics::ScreenWidth;
     wnd.GetGfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 40.0f));
 }

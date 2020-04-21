@@ -118,6 +118,9 @@
     <ClInclude Include="Box.hpp">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
+    <ClInclude Include="DrawableBase.hpp">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MikastivException.cpp">
