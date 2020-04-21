@@ -1,13 +1,16 @@
 #include "TransformConstBuffer.hpp"
 
 TransformConstBuffer::TransformConstBuffer(Graphics& gfx, const Drawable& parent)
-    : vertexCBuffer(gfx)
-    , parent(parent)
+    : parent(parent)
 {
+    if (!pVertexCBuffer)
+    {
+        pVertexCBuffer = std::make_unique<VertexConstantBuffer<DirectX::XMMATRIX>>(gfx);
+    }
 }
 
 auto TransformConstBuffer::Bind(Graphics& gfx) noexcept -> void
 {
-    vertexCBuffer.Update(gfx, DirectX::XMMatrixTranspose(parent.GetTransformXM() * gfx.GetProjection()));
-    vertexCBuffer.Bind(gfx);
+    pVertexCBuffer->Update(gfx, DirectX::XMMatrixTranspose(parent.GetTransformXM() * gfx.GetProjection()));
+    pVertexCBuffer->Bind(gfx);
 }

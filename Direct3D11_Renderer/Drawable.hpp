@@ -24,6 +24,8 @@ public:
     virtual auto GetTransformXM() const noexcept -> DirectX::XMMATRIX = 0;
     virtual auto Update(float deltaTime) noexcept -> void = 0;
     auto Draw(Graphics& gfx) const noexcept(!IS_DEBUG) -> void;
+
+protected:
     auto AddBind(std::unique_ptr<Bindable> bindable) noexcept(!IS_DEBUG) -> void;
     auto AddIndexBuffer(std::unique_ptr<IndexBuffer> indexBuffer) noexcept(!IS_DEBUG) -> void;
 
