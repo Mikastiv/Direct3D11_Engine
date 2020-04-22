@@ -4,7 +4,7 @@
 #include "IndexBuffer.hpp"
 
 template <typename T>
-class DrawableBase : public Drawable
+class Entity : public Drawable
 {
 protected:
     static auto IsStaticInitialized() noexcept -> bool

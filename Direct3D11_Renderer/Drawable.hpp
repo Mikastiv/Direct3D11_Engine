@@ -12,7 +12,7 @@ class IndexBuffer;
 class Drawable
 {
     template <typename T>
-    friend class DrawableBase;
+    friend class Entity;
 
 public:
     Drawable() = default;

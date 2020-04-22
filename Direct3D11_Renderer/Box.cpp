@@ -1,31 +1,24 @@
 #include "Box.hpp"
 #include "BindableBase.hpp"
+#include "Cube.hpp"
+#include "Cone.hpp"
 
 Box::Box(Graphics& gfx, float xOffset)
     : xOffset(xOffset)
 {
     struct Vertex
     {
-        struct
-        {
-            float x;
-            float y;
-            float z;
-        } pos;
+        DirectX::XMFLOAT3 pos;
     };
 
     if (!IsStaticInitialized())
     {
         // Vertex Buffer bind
-        const std::vector<Vertex> vertices{ { -1.0f, -1.0f, -1.0f }, { 1.0f, -1.0f, -1.0f }, { -1.0f, 1.0f, -1.0f },
-                                            { 1.0f, 1.0f, -1.0f },   { -1.0f, -1.0f, 1.0f }, { 1.0f, -1.0f, 1.0f },
-                                            { -1.0f, 1.0f, 1.0f },   { 1.0f, 1.0f, 1.0f } };
-        AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices));
+        const auto model = Cone::Make<Vertex>();
+        AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
         // Index Buffer bind
-        const std::vector<uint16_t> indices{ 0, 2, 1, 2, 3, 1, 1, 3, 5, 3, 7, 5, 2, 6, 3, 3, 6, 7,
-                                             4, 5, 7, 4, 7, 6, 0, 4, 2, 2, 4, 6, 0, 1, 4, 1, 5, 4 };
-        AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, indices));
+        AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.indices));
 
         // Vertex Shader bind
         auto pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShader.cso");
@@ -44,15 +37,20 @@ Box::Box(Graphics& gfx, float xOffset)
                 float g;
                 float b;
                 float a;
-            } face_colors[6];
+            } face_colors[11];
         };
         const ConstBufferColors cbufColors = { {
             { 1.0f, 0.0f, 1.0f },
             { 1.0f, 0.0f, 0.0f },
             { 0.0f, 1.0f, 0.0f },
+            { 1.0f, 1.0f, 0.0f },
+            { 0.0f, 1.0f, 1.0f },
             { 0.0f, 0.0f, 1.0f },
             { 1.0f, 1.0f, 0.0f },
             { 0.0f, 1.0f, 1.0f },
+            { 1.0f, 1.0f, 0.0f },
+            { 0.0f, 1.0f, 1.0f },
+            { 1.0f, 0.0f, 0.0f },
         } };
         AddStaticBind(std::make_unique<PixelConstantBuffer<ConstBufferColors>>(gfx, cbufColors));
 

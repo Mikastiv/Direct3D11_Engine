@@ -1,8 +1,8 @@
 #pragma once
 
-#include "DrawableBase.hpp"
+#include "Entity.hpp"
 
-class Box : public DrawableBase<Box>
+class Box : public Entity<Box>
 {
 public:
     Box(Graphics& gfx, float xOffset);
