@@ -2,6 +2,7 @@
 #include "BindableBase.hpp"
 #include "Cube.hpp"
 #include "Cone.hpp"
+#include "Plane.hpp"
 
 Box::Box(Graphics& gfx, float xOffset)
     : xOffset(xOffset)
@@ -14,7 +15,7 @@ Box::Box(Graphics& gfx, float xOffset)
     if (!IsStaticInitialized())
     {
         // Vertex Buffer bind
-        const auto model = Cone::Make<Vertex>();
+        const auto model = Plane::Make<Vertex>();
         AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
         // Index Buffer bind
@@ -37,20 +38,15 @@ Box::Box(Graphics& gfx, float xOffset)
                 float g;
                 float b;
                 float a;
-            } face_colors[11];
+            } face_colors[6];
         };
         const ConstBufferColors cbufColors = { {
             { 1.0f, 0.0f, 1.0f },
-            { 1.0f, 0.0f, 0.0f },
             { 0.0f, 1.0f, 0.0f },
-            { 1.0f, 1.0f, 0.0f },
-            { 0.0f, 1.0f, 1.0f },
+            { 1.0f, 0.0f, 0.0f },
             { 0.0f, 0.0f, 1.0f },
             { 1.0f, 1.0f, 0.0f },
             { 0.0f, 1.0f, 1.0f },
-            { 1.0f, 1.0f, 0.0f },
-            { 0.0f, 1.0f, 1.0f },
-            { 1.0f, 0.0f, 0.0f },
         } };
         AddStaticBind(std::make_unique<PixelConstantBuffer<ConstBufferColors>>(gfx, cbufColors));
 

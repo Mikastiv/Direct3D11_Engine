@@ -6,11 +6,10 @@ class Cone
 {
 public:
     template <typename T>
-    static auto Make(float radius = 0.5f, float height = 2.0f, size_t divisions = 10u) -> IndexedTriangleList<T>
+    static auto Make(float radius = 0.5f, float height = 1.5f, size_t divisions = 10u) -> IndexedTriangleList<T>
     {
         const auto baseVector = DirectX::XMVectorSet(0.0f, 0.0f, radius, 0.0f);
-        const size_t nVerticesBase = divisions + 1;
-        const float angleStep = DirectX::XM_2PI / nVerticesBase;
+        const float angleStep = DirectX::XM_2PI / divisions;
 
         std::vector<DirectX::XMFLOAT3> vertices{};
         const uint16_t iTopVertex = (uint16_t)vertices.size();
@@ -19,7 +18,7 @@ public:
         const uint16_t iBottomVertex = (uint16_t)vertices.size();
         vertices.emplace_back(0.0f, 0.0f, 0.0f);
 
-        for (size_t i = 0; i < nVerticesBase; i++)
+        for (size_t i = 0; i < divisions; i++)
         {
             vertices.emplace_back();
             DirectX::XMStoreFloat3(&vertices.back(),
@@ -48,7 +47,6 @@ public:
 
         std::vector<T> output{};
         output.resize(vertices.size());
-
         for (size_t i = 0; i < vertices.size(); i++)
         {
             output[i].pos = vertices[i];
