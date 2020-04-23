@@ -136,6 +136,9 @@
     <ClInclude Include="Plane.hpp">
       <Filter>Header Files\Shapes</Filter>
     </ClInclude>
+    <ClInclude Include="Prism.hpp">
+      <Filter>Header Files\Shapes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MikastivException.cpp">

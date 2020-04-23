@@ -116,6 +116,7 @@
     <ClInclude Include="Mouse.hpp" />
     <ClInclude Include="PixelShader.hpp" />
     <ClInclude Include="Plane.hpp" />
+    <ClInclude Include="Prism.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Topology.hpp" />
     <ClInclude Include="TransformConstBuffer.hpp" />
