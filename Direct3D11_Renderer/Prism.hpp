@@ -13,27 +13,29 @@ public:
         const auto bottomBaseVector = DirectX::XMVectorSet(0.0f, -halfHeight, radius, 0.0f);
         const float angleStep = DirectX::XM_2PI / divisions;
 
-        std::vector<DirectX::XMFLOAT3> vertices{};
+        std::vector<T> vertices{};
         for (size_t i = 0; i < divisions; i++)
         {
             vertices.emplace_back();
             DirectX::XMStoreFloat3(
-                &vertices.back(),
+                &vertices.back().pos,
                 DirectX::XMVector3Transform(topBaseVector, DirectX::XMMatrixRotationY(angleStep * i)));
         }
         for (size_t i = 0; i < divisions; i++)
         {
             vertices.emplace_back();
             DirectX::XMStoreFloat3(
-                &vertices.back(),
+                &vertices.back().pos,
                 DirectX::XMVector3Transform(bottomBaseVector, DirectX::XMMatrixRotationY(angleStep * i)));
         }
 
         const uint16_t iTopVertex = (uint16_t)vertices.size();
-        vertices.emplace_back(0.0f, halfHeight, 0.0f);
+        vertices.emplace_back();
+        vertices.back().pos = { 0.0f, halfHeight, 0.0f };
 
         const uint16_t iBottomVertex = (uint16_t)vertices.size();
-        vertices.emplace_back(0.0f, -halfHeight, 0.0f);
+        vertices.emplace_back();
+        vertices.back().pos = { 0.0f, -halfHeight, 0.0f };
 
         // Top and bottom faces
         std::vector<uint16_t> indices{};
@@ -75,13 +77,6 @@ public:
         indices.push_back(divisions - 1);
         indices.push_back(divisions * 2 - 1);
 
-        std::vector<T> output{};
-        output.resize(vertices.size());
-        for (size_t i = 0; i < vertices.size(); i++)
-        {
-            output[i].pos = vertices[i];
-        }
-
-        return { std::move(output), std::move(indices) };
+        return { std::move(vertices), std::move(indices) };
     }
 };

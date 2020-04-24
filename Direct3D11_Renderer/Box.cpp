@@ -16,7 +16,7 @@ Box::Box(Graphics& gfx, float xOffset)
     if (!IsStaticInitialized())
     {
         // Vertex Buffer bind
-        const auto model = Prism::Make<Vertex>();
+        const auto model = Cube::Make<Vertex>();
         AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
         // Index Buffer bind
