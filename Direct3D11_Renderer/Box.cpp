@@ -5,6 +5,7 @@
 #include "Plane.hpp"
 #include "Prism.hpp"
 #include "Sphere.hpp"
+#include "IcoSphere.hpp"
 
 Box::Box(Graphics& gfx, float xOffset)
     : xOffset(xOffset)
@@ -17,7 +18,7 @@ Box::Box(Graphics& gfx, float xOffset)
     if (!IsStaticInitialized())
     {
         // Vertex Buffer bind
-        const auto model = Sphere::Make<Vertex>();
+        const auto model = IcoSphere::Make<Vertex>();
         AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
         // Index Buffer bind

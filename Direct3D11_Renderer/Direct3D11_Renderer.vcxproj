@@ -107,6 +107,7 @@
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="GraphicsMacros.hpp" />
     <ClInclude Include="Helpers.hpp" />
+    <ClInclude Include="IcoSphere.hpp" />
     <ClInclude Include="IndexBuffer.hpp" />
     <ClInclude Include="IndexedTriangleList.hpp" />
     <ClInclude Include="InputLayout.hpp" />
