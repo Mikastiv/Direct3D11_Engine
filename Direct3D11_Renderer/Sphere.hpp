@@ -1,14 +1,17 @@
 #pragma once
 
 #include "IndexedTriangleList.hpp"
+#include <cmath>
+#include <numeric>
 
 class Sphere
 {
 public:
     template <typename T>
-    static auto Make(float radius = 1.0f, uint16_t latDivisions = 10u, uint16_t lonDivisions = 20u)
+    static auto Make(uint16_t latDivisions = 10u, uint16_t lonDivisions = 20u)
         -> IndexedTriangleList<T>
     {
+        const float radius = 1.0f;
         const auto baseVector = DirectX::XMVectorSet(0.0f, radius, 0.0f, 0.0f);
         const float latAngleStep = DirectX::XM_PI / latDivisions;
         const float lonAngleStep = DirectX::XM_2PI / lonDivisions;
@@ -28,27 +31,27 @@ public:
             }
         }
 
-        const auto getIndex = [=](uint16_t x, uint16_t y) { return y * lonDivisions + x; };
+        const auto GetIndex = [=](uint16_t x, uint16_t y) { return y * lonDivisions + x; };
 
         std::vector<uint16_t> indices{};
         for (uint16_t y = 0; y < latDivisions - 2; y++)
         {
             for (uint16_t x = 0; x < lonDivisions - 1; x++)
             {
-                indices.push_back(getIndex(x, y));
-                indices.push_back(getIndex(x, y + 1));
-                indices.push_back(getIndex(x + 1, y));
-                indices.push_back(getIndex(x + 1, y));
-                indices.push_back(getIndex(x, y + 1));
-                indices.push_back(getIndex(x + 1, y + 1));
+                indices.push_back(GetIndex(x, y));
+                indices.push_back(GetIndex(x, y + 1));
+                indices.push_back(GetIndex(x + 1, y));
+                indices.push_back(GetIndex(x + 1, y));
+                indices.push_back(GetIndex(x, y + 1));
+                indices.push_back(GetIndex(x + 1, y + 1));
             }
             // Last square
-            indices.push_back(getIndex(0, y));
-            indices.push_back(getIndex(lonDivisions - 1, y));
-            indices.push_back(getIndex(0, y + 1));
-            indices.push_back(getIndex(0, y + 1));
-            indices.push_back(getIndex(lonDivisions - 1, y));
-            indices.push_back(getIndex(lonDivisions - 1, y + 1));
+            indices.push_back(GetIndex(0, y));
+            indices.push_back(GetIndex(lonDivisions - 1, y));
+            indices.push_back(GetIndex(0, y + 1));
+            indices.push_back(GetIndex(0, y + 1));
+            indices.push_back(GetIndex(lonDivisions - 1, y));
+            indices.push_back(GetIndex(lonDivisions - 1, y + 1));
         }
 
         const uint16_t iTopVertex = (uint16_t)vertices.size();

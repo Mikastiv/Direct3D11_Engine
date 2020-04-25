@@ -6,8 +6,9 @@ class Cone
 {
 public:
     template <typename T>
-    static auto Make(float radius = 0.5f, float height = 1.5f, uint16_t divisions = 10u) -> IndexedTriangleList<T>
+    static auto Make(float radius = 0.5f, uint16_t divisions = 10u) -> IndexedTriangleList<T>
     {
+        const float height = 1.0f;
         const float halfHeight = height / 2.0f;
         const auto baseVector = DirectX::XMVectorSet(0.0f, -halfHeight, radius, 0.0f);
         const float angleStep = DirectX::XM_2PI / divisions;

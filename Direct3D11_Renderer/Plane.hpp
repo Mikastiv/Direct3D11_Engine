@@ -6,8 +6,9 @@ class Plane
 {
 public:
     template <typename T>
-    static auto Make(float size = 1.0f, size_t divisions = 10u) -> IndexedTriangleList<T>
+    static auto Make(size_t divisions = 10u) -> IndexedTriangleList<T>
     {
+        const float size = 1.0f;
         const float divisionSize = size / divisions;
         const size_t nVertexPerLine = divisions + 1;
         const DirectX::XMFLOAT3 bottomLeft{ -size / 2.0f, -size / 2.0f, 0.0f };

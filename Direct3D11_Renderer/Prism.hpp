@@ -6,8 +6,9 @@ class Prism
 {
 public:
     template <typename T>
-    static auto Make(float radius = 0.5f, float height = 2.0f, uint16_t divisions = 3u) -> IndexedTriangleList<T>
+    static auto Make(float radius = 0.5f, uint16_t divisions = 3u) -> IndexedTriangleList<T>
     {
+        const float height = 1.0f;
         const float halfHeight = height / 2.0f;
         const auto topBaseVector = DirectX::XMVectorSet(0.0f, halfHeight, radius, 0.0f);
         const auto bottomBaseVector = DirectX::XMVectorSet(0.0f, -halfHeight, radius, 0.0f);

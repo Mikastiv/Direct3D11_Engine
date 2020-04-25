@@ -6,8 +6,9 @@ class Cube
 {
 public:
     template <typename T>
-    static auto Make(float size = 1u) -> IndexedTriangleList<T>
+    static auto Make() -> IndexedTriangleList<T>
     {
+        const float size = 1.0f;
         const float side = size / 2.0f;
 
         std::vector<T> vertices;
