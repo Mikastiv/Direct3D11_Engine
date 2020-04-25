@@ -7,7 +7,7 @@ IndexBuffer::IndexBuffer(Graphics& gfx, const std::vector<uint16_t>& indices)
     INFOMAN(gfx);
 
     D3D11_BUFFER_DESC desc{};
-    desc.ByteWidth = UINT(sizeof(indices) * count);
+    desc.ByteWidth = UINT(sizeof(uint16_t) * count);
     desc.Usage = D3D11_USAGE_DEFAULT;
     desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     desc.CPUAccessFlags = 0u;
