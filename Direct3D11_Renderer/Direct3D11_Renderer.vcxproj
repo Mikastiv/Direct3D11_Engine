@@ -118,6 +118,7 @@
     <ClInclude Include="Plane.hpp" />
     <ClInclude Include="Prism.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Sphere.hpp" />
     <ClInclude Include="Topology.hpp" />
     <ClInclude Include="TransformConstBuffer.hpp" />
     <ClInclude Include="VertexBuffer.hpp" />

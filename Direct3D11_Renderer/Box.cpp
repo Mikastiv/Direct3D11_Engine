@@ -4,6 +4,7 @@
 #include "Cone.hpp"
 #include "Plane.hpp"
 #include "Prism.hpp"
+#include "Sphere.hpp"
 
 Box::Box(Graphics& gfx, float xOffset)
     : xOffset(xOffset)
@@ -16,7 +17,7 @@ Box::Box(Graphics& gfx, float xOffset)
     if (!IsStaticInitialized())
     {
         // Vertex Buffer bind
-        const auto model = Cube::Make<Vertex>();
+        const auto model = Sphere::Make<Vertex>();
         AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
         // Index Buffer bind
