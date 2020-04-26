@@ -2,12 +2,15 @@
 
 #include "IndexedTriangleList.hpp"
 
+#include <cassert>
+
 class Prism
 {
 public:
     template <typename T>
     static auto Make(float radius = 0.5f, uint16_t divisions = 3u) -> IndexedTriangleList<T>
     {
+        assert(divisions > 2u);
         const float height = 1.0f;
         const float halfHeight = height / 2.0f;
         const auto topBaseVector = DirectX::XMVectorSet(0.0f, halfHeight, radius, 0.0f);

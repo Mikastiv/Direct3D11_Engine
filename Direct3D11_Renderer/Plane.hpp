@@ -6,11 +6,11 @@ class Plane
 {
 public:
     template <typename T>
-    static auto Make(size_t divisions = 10u) -> IndexedTriangleList<T>
+    static auto Make(size_t tessellation = 1u) -> IndexedTriangleList<T>
     {
         const float size = 1.0f;
-        const float divisionSize = size / divisions;
-        const size_t nVertexPerLine = divisions + 1;
+        const float divisionSize = size / tessellation;
+        const size_t nVertexPerLine = tessellation + 1;
         const DirectX::XMFLOAT3 bottomLeft{ -size / 2.0f, -size / 2.0f, 0.0f };
         std::vector<T> vertices{};
 
