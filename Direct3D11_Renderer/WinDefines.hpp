@@ -1,10 +1,11 @@
 #pragma once
 
-// target Windows 7 or later
+// target Windows 8 or later
 constexpr int WINVER = 0x0602;
 constexpr int _WIN32_WINNT = 0x0602;
 #include <sdkddkver.h>
 
+#ifndef ENABLE_WIN_MACROS
 #define WIN32_LEAN_AND_MEAN
 #define NOGDICAPMASKS
 #define NOSYSMETRICS
@@ -22,7 +23,6 @@ constexpr int _WIN32_WINNT = 0x0602;
 #define NONLS
 #define NOMEMMGR
 #define NOMETAFILE
-#define NOMINMAX
 #define NOOPENFILE
 #define NOSCROLL
 #define NOSERVICE
@@ -39,7 +39,9 @@ constexpr int _WIN32_WINNT = 0x0602;
 #define NOPROXYSTUB
 #define NOIMAGE
 #define NOTAPE
+#endif
 
+#define NOMINMAX
 #define STRICT
 
 #include <Windows.h>

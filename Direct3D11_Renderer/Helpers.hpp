@@ -8,11 +8,14 @@ inline auto CharToWString(const char* c) -> std::wstring
     size_t outputSize = strlen(c);
     std::wstring wstr(outputSize, L'#');
 
-    size_t charConverted{};
-    const errno_t errNo = mbstowcs_s(&charConverted, wstr.data(), wstr.size() + 1, c, outputSize);
+    const errno_t err = mbstowcs_s(nullptr, wstr.data(), wstr.size() + 1, c, _TRUNCATE);
 
-    assert(errNo == 0);
-    assert(charConverted == wstr.size() + 1);
+    if (err == STRUNCATE)
+    {
+        OutputDebugString(L"Truncation occurred on string: \"");
+        OutputDebugStringA(c);
+        OutputDebugString(L"\"!\n");
+    }
 
     return wstr;
 }
@@ -22,11 +25,14 @@ inline auto WCharToString(const wchar_t* wc) -> std::string
     size_t outputSize = wcslen(wc);
     std::string str(outputSize, '#');
 
-    size_t charConverted{};
-    const errno_t errNo = wcstombs_s(&charConverted, str.data(), str.size() + 1, wc, outputSize);
+    const errno_t err = wcstombs_s(nullptr, str.data(), str.size() + 1, wc, _TRUNCATE);
 
-    assert(errNo == 0);
-    assert(charConverted == str.size() + 1);
+    if (err == STRUNCATE)
+    {
+        OutputDebugString(L"Truncation occurred on string: \"");
+        OutputDebugString(wc);
+        OutputDebugString(L"\"!\n");
+    }
 
     return str;
 }

@@ -1,14 +1,8 @@
 #include "Box.hpp"
 #include "BindableBase.hpp"
 #include "Cube.hpp"
-#include "Cone.hpp"
-#include "Plane.hpp"
-#include "Prism.hpp"
-#include "Sphere.hpp"
-#include "IcoSphere.hpp"
 
-Box::Box(Graphics& gfx, float xOffset)
-    : xOffset(xOffset)
+Box::Box(Graphics& gfx)
 {
     struct Vertex
     {
@@ -18,7 +12,7 @@ Box::Box(Graphics& gfx, float xOffset)
     if (!IsStaticInitialized())
     {
         // Vertex Buffer bind
-        const auto model = IcoSphere::Make<Vertex>();
+        const auto model = Cube::Make<Vertex>();
         AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
         // Index Buffer bind
@@ -78,5 +72,5 @@ auto Box::Update(float deltaTime) noexcept -> void
 
 auto Box::GetTransformXM() const noexcept -> DirectX::XMMATRIX
 {
-    return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(xOffset, 0.0f, 5.0f);
+    return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f);
 }

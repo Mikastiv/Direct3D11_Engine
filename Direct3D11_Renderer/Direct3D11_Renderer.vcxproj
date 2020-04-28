@@ -97,6 +97,7 @@
     <ClInclude Include="Bindable.hpp" />
     <ClInclude Include="BindableBase.hpp" />
     <ClInclude Include="Box.hpp" />
+    <ClInclude Include="Color.hpp" />
     <ClInclude Include="Cone.hpp" />
     <ClInclude Include="ConstantBuffers.hpp" />
     <ClInclude Include="Cube.hpp" />
@@ -104,6 +105,8 @@
     <ClInclude Include="Drawable.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="DXGIInfoManager.hpp" />
+    <ClInclude Include="GDIPlusManager.hpp" />
+    <ClInclude Include="GDIPlusInclude.hpp" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="GraphicsMacros.hpp" />
     <ClInclude Include="Helpers.hpp" />
@@ -120,6 +123,7 @@
     <ClInclude Include="Prism.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sphere.hpp" />
+    <ClInclude Include="Surface.hpp" />
     <ClInclude Include="Topology.hpp" />
     <ClInclude Include="TransformConstBuffer.hpp" />
     <ClInclude Include="VertexBuffer.hpp" />
@@ -134,6 +138,7 @@
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DXGIInfoManager.cpp" />
+    <ClCompile Include="GDIPlusManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputLayout.cpp" />
@@ -141,6 +146,7 @@
     <ClCompile Include="MikastivException.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Topology.cpp" />
     <ClCompile Include="TransformConstBuffer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />

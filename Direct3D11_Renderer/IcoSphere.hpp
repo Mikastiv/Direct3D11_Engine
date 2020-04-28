@@ -103,7 +103,7 @@ public:
         indices.push_back(1);
 
         std::unordered_map<uint16_t, uint16_t> middlePointCache{};
-        const auto GetMiddlePoint = [&vertices, &middlePointCache, &AddVertex](uint16_t p0, uint16_t p1) {
+        const auto GetMiddlePoint = [&](uint16_t p0, uint16_t p1) {
             uint16_t smallerIndex = std::min(p0, p1);
             uint16_t greaterIndex = std::max(p0, p1);
             uint16_t key = (smallerIndex << 8) + greaterIndex;
