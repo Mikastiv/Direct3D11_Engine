@@ -158,6 +158,7 @@
     <ResourceCompile Include="Direct3D11_Renderer.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="directx.png" />
     <Image Include="dx11.ico" />
   </ItemGroup>
   <ItemGroup>

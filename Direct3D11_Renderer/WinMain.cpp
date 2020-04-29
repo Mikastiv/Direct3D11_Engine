@@ -3,10 +3,7 @@
 
 #include <clocale>
 
-auto CALLBACK WinMain([[maybe_unused]] HINSTANCE hInstance,
-                      [[maybe_unused]] HINSTANCE hPrevInstance,
-                      [[maybe_unused]] LPSTR lpCmdLine,
-                      [[maybe_unused]] int nShowCmd) -> int
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
     setlocale(LC_ALL, "en-US");
 

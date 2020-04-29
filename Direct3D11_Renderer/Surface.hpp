@@ -9,6 +9,9 @@
 class Surface
 {
 public:
+    using Color = Color;
+
+public:
     class Exception : public MikastivException
     {
     public:
@@ -25,7 +28,6 @@ public:
     static auto FromFile(const std::wstring& file) -> Surface;
 
 public:
-    Surface(unsigned int width, unsigned int height, unsigned int pitch) noexcept;
     Surface(unsigned int width, unsigned int height) noexcept;
     Surface(const Surface& other) noexcept(!IS_DEBUG);
     Surface(Surface&& other) noexcept;

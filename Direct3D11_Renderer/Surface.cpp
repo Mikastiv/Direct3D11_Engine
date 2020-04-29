@@ -4,6 +4,9 @@
 
 #include <sstream>
 #include <cassert>
+#include <vector>
+#include <string_view>
+#include <algorithm>
 
 Surface::Exception::Exception(int line, const char* file, std::string note)
     : MikastivException(line, file)
@@ -63,15 +66,10 @@ auto Surface::FromFile(const std::wstring& file) -> Surface
     return Surface(width, height, std::move(pBuffer));
 }
 
-Surface::Surface(unsigned int width, unsigned int height, unsigned int pitch) noexcept
-    : pBuffer(std::make_unique<Color[]>((size_t)pitch * height))
+Surface::Surface(unsigned int width, unsigned int height) noexcept
+    : pBuffer(std::make_unique<Color[]>((size_t)width * height))
     , width(width)
     , height(height)
-{
-}
-
-Surface::Surface(unsigned int width, unsigned int height) noexcept
-    : Surface(width, height, width)
 {
 }
 
@@ -94,26 +92,36 @@ Surface::Surface(Surface&& other) noexcept
 
 auto Surface::operator=(const Surface& rhs) noexcept(!IS_DEBUG) -> Surface&
 {
-    width = rhs.width;
-    height = rhs.height;
-    pBuffer = std::make_unique<Color[]>((size_t)width * height);
-    memcpy(pBuffer.get(), rhs.pBuffer.get(), (size_t)width * height * sizeof(Color));
+    if (rhs.pBuffer != pBuffer)
+    {
+        width = rhs.width;
+        height = rhs.height;
+        pBuffer = std::make_unique<Color[]>((size_t)width * height);
+        memcpy(pBuffer.get(), rhs.pBuffer.get(), (size_t)width * height * sizeof(Color));
+    }
     return *this;
 }
 
 auto Surface::operator=(Surface&& rhs) noexcept -> Surface&
 {
-    width = rhs.width;
-    height = rhs.height;
-    pBuffer = std::move(rhs.pBuffer);
-    rhs.width = 0;
-    rhs.height = 0;
+    if (rhs.pBuffer != pBuffer)
+    {
+        width = rhs.width;
+        height = rhs.height;
+        pBuffer = std::move(rhs.pBuffer);
+        rhs.width = 0;
+        rhs.height = 0;
+    }
     return *this;
 }
 
 auto Surface::Clear(Color fill) noexcept -> void
 {
-    memset(pBuffer.get(), fill.packedColor, (size_t)width * height * sizeof(Color));
+    const auto size = (size_t)width * height;
+    for (size_t i = 0; i < size; ++i)
+    {
+        pBuffer[i] = Color{ fill.packedColor };
+    }
 }
 
 auto Surface::PutPixel(unsigned int x, unsigned int y, Color c) noexcept(!IS_DEBUG) -> void
@@ -147,12 +155,12 @@ auto Surface::GetBufferPtr() noexcept -> Color*
 
 auto Surface::GetBufferPtr() const noexcept -> const Color*
 {
-    return const_cast<const Color*>(pBuffer.get());
+    return pBuffer.get();
 }
 
 auto Surface::GetBufferCPtr() const noexcept -> const Color*
 {
-    return const_cast<const Color*>(pBuffer.get());
+    return pBuffer.get();
 }
 
 auto Surface::SaveBMP(const std::wstring& file) const -> void
@@ -161,7 +169,6 @@ auto Surface::SaveBMP(const std::wstring& file) const -> void
         UINT num = 0u;
         UINT size = 0u;
 
-        Gdiplus::ImageCodecInfo* pImageCodecInfo = nullptr;
         Gdiplus::GetImageEncodersSize(&num, &size);
 
         if (size == 0u)
@@ -172,7 +179,7 @@ auto Surface::SaveBMP(const std::wstring& file) const -> void
             throw Exception(__LINE__, __FILE__, oss.str());
         }
 
-        pImageCodecInfo = static_cast<Gdiplus::ImageCodecInfo*>(malloc(size));
+        auto pImageCodecInfo = static_cast<Gdiplus::ImageCodecInfo*>(malloc(size));
         if (pImageCodecInfo == nullptr)
         {
             std::ostringstream oss{};
@@ -182,9 +189,10 @@ auto Surface::SaveBMP(const std::wstring& file) const -> void
         }
 
         Gdiplus::GetImageEncoders(num, size, pImageCodecInfo);
+
         for (UINT i = 0; i < num; i++)
         {
-            if (wcscmp(pImageCodecInfo[i].FormatDescription, format) == 0)
+            if (std::wstring_view{ pImageCodecInfo[i].MimeType } == std::wstring_view{ format })
             {
                 *pCLSID = pImageCodecInfo[i].Clsid;
                 free(pImageCodecInfo);
@@ -200,7 +208,7 @@ auto Surface::SaveBMP(const std::wstring& file) const -> void
     };
 
     CLSID bmpID{};
-    GetEncoderCLSID(L"BMP", &bmpID);
+    GetEncoderCLSID(L"image/bmp", &bmpID);
 
     Gdiplus::Bitmap bitmap(
         width, height, width * sizeof(Color), PixelFormat32bppARGB, reinterpret_cast<BYTE*>(pBuffer.get()));
