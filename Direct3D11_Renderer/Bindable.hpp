@@ -5,7 +5,12 @@
 class Bindable
 {
 public:
+    Bindable() = default;
+    Bindable(const Bindable&) = delete;
+    Bindable(Bindable&&) = delete;
     virtual ~Bindable() = default;
+    auto operator=(const Bindable&) -> Bindable& = delete;
+    auto operator=(Bindable&&) -> Bindable& = delete;
     virtual auto Bind(Graphics& gfx) noexcept -> void = 0;
 
 protected:

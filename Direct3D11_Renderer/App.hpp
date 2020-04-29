@@ -8,7 +8,11 @@ class App
 {
 public:
     App();
+    App(const App&) = delete;
+    App(App&&) = delete;
     ~App() = default;
+    auto operator=(const App&) -> App& = delete;
+    auto operator=(App&&) -> App& = delete;
     auto Start() -> int;
 
 private:

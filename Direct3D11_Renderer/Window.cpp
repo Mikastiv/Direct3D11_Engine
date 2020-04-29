@@ -57,16 +57,16 @@ Window::Window(int width, int height, const wchar_t* name)
     }
 
     hWnd = CreateWindow(WindowClass::GetName(),
-                         name,
-                         WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-                         CW_USEDEFAULT,
-                         CW_USEDEFAULT,
-                         wr.right - wr.left,
-                         wr.bottom - wr.top,
-                         nullptr,
-                         nullptr,
-                         WindowClass::GetInstance(),
-                         this);
+                        name,
+                        WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+                        CW_USEDEFAULT,
+                        CW_USEDEFAULT,
+                        wr.right - wr.left,
+                        wr.bottom - wr.top,
+                        nullptr,
+                        nullptr,
+                        WindowClass::GetInstance(),
+                        this);
 
     ShowWindow(hWnd, SW_SHOWDEFAULT);
 }
@@ -283,6 +283,8 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
         break;
     }
         // -------------------------------------------------------
+    default:
+        break;
     }
 
     return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -319,7 +321,7 @@ Window::Exception::Exception(int line, const char* file, HRESULT hr) noexcept
 {
 }
 
-const char* Window::Exception::what() const noexcept
+auto Window::Exception::what() const noexcept -> const char*
 {
     std::ostringstream oss;
     oss << GetType() << std::endl

@@ -5,7 +5,7 @@
 class Box : public Entity<Box>
 {
 public:
-    Box(Graphics& gfx);
+    explicit Box(Graphics& gfx);
     auto Update(float deltaTime) noexcept -> void override;
     auto GetTransformXM() const noexcept -> DirectX::XMMATRIX override;
 

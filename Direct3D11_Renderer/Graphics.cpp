@@ -5,9 +5,9 @@
 #include <sstream>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include <array>
 
 namespace WRL = Microsoft::WRL;
-namespace DX = DirectX;
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
@@ -191,8 +191,8 @@ auto Graphics::EndFrame() -> void
 
 auto Graphics::ClearBuffer(float red, float green, float blue) noexcept -> void
 {
-    const float color[] = { red, green, blue, 1.0f };
-    pContext->ClearRenderTargetView(pTarget.Get(), color);
+    const std::array<float, 4> color = { red, green, blue, 1.0f };
+    pContext->ClearRenderTargetView(pTarget.Get(), color.data());
     pContext->ClearDepthStencilView(pDsv.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
