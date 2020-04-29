@@ -21,7 +21,8 @@ public:
             for (size_t x = 0; x < nVertexPerLine; x++)
             {
                 vertices.emplace_back();
-                vertices.back().pos = { xValue(x), yValue(y), 0.0f };
+                // Negative y to get topleft first (have same layout as uv coords)
+                vertices.back().pos = { xValue(x), -yValue(y), 0.0f };
             }
         }
 
@@ -32,12 +33,12 @@ public:
             for (size_t x = 0; x < nVertexPerLine - 1; x++)
             {
                 indices.push_back(getIndex(x, y));
-                indices.push_back(getIndex(x, y + 1));
                 indices.push_back(getIndex(x + 1, y));
+                indices.push_back(getIndex(x, y + 1));
 
                 indices.push_back(getIndex(x + 1, y));
-                indices.push_back(getIndex(x, y + 1));
                 indices.push_back(getIndex(x + 1, y + 1));
+                indices.push_back(getIndex(x, y + 1));
             }
         }
 

@@ -19,12 +19,12 @@ Box::Box(Graphics& gfx)
         AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.indices));
 
         // Vertex Shader bind
-        auto pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShader.cso");
+        auto pVertexShader = std::make_unique<VertexShader>(gfx, L"ColorIndexVS.cso");
         auto pVSByteCode = pVertexShader->GetByteCode();
         AddStaticBind(std::move(pVertexShader));
 
         // Pixel Shader bind
-        AddStaticBind(std::make_unique<PixelShader>(gfx, L"PixelShader.cso"));
+        AddStaticBind(std::make_unique<PixelShader>(gfx, L"ColorIndexPS.cso"));
 
         // Constant buffer for face colors
         struct ConstBufferColors
@@ -35,15 +35,17 @@ Box::Box(Graphics& gfx)
                 float g;
                 float b;
                 float a;
-            } face_colors[6];
+            } face_colors[8];
         };
         const ConstBufferColors cbufColors = { {
+            { 1.0f, 0.0f, 0.0f },
+            { 1.0f, 1.0f, 0.0f },
             { 1.0f, 0.0f, 1.0f },
             { 0.0f, 1.0f, 0.0f },
-            { 1.0f, 0.0f, 0.0f },
-            { 0.0f, 0.0f, 1.0f },
-            { 1.0f, 1.0f, 0.0f },
             { 0.0f, 1.0f, 1.0f },
+            { 0.0f, 0.0f, 1.0f },
+            { 0.5f, 0.5f, 0.5f },
+            { 0.5f, 0.0f, 0.5f }
         } };
         AddStaticBind(std::make_unique<PixelConstantBuffer<ConstBufferColors>>(gfx, cbufColors));
 

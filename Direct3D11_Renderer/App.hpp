@@ -3,6 +3,7 @@
 #include "Window.hpp"
 #include "MikastivTimer.hpp"
 #include "Box.hpp"
+#include "Sheet.hpp"
 
 class App
 {
@@ -25,4 +26,5 @@ private:
     Window wnd;
     Timer ft{};
     std::vector<std::unique_ptr<Box>> boxes{};
+    std::vector<std::unique_ptr<Sheet>> sheets{};
 };
