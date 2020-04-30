@@ -23,29 +23,29 @@ public:
 
         for (size_t y = 0, i = 0; y < nVerticesY; y++)
         {
-            const auto yPos = (float)y * divisionYSize;
+            // Negative y to get topleft first (have same layout as uv coords)
+            const auto yPos = (-float(y) * divisionYSize);
             for (size_t x = 0; x < nVerticesX; x++, i++)
             {
-                // Negative y to get topleft first (have same layout as uv coords)
                 const auto v =
-                    DirectX::XMVectorAdd(bottomLeft, DirectX::XMVectorSet((float)x * divisionXSize, -yPos, 0.0f, 0.0f));
+                    DirectX::XMVectorAdd(bottomLeft, DirectX::XMVectorSet((float)x * divisionXSize, yPos, 0.0f, 0.0f));
                 DirectX::XMStoreFloat3(&vertices[i].pos, v);
             }
         }
 
         std::vector<uint16_t> indices{};
-        const auto getIndex = [=](size_t x, size_t y) { return uint16_t(y * nVerticesX + x); };
+        const auto GetIndex = [=](size_t x, size_t y) { return uint16_t(y * nVerticesX + x); };
         for (size_t y = 0; y < nVerticesY - 1; y++)
         {
             for (size_t x = 0; x < nVerticesX - 1; x++)
             {
-                indices.push_back(getIndex(x, y));
-                indices.push_back(getIndex(x + 1, y));
-                indices.push_back(getIndex(x, y + 1));
+                indices.push_back(GetIndex(x, y));
+                indices.push_back(GetIndex(x + 1, y));
+                indices.push_back(GetIndex(x, y + 1));
 
-                indices.push_back(getIndex(x + 1, y));
-                indices.push_back(getIndex(x + 1, y + 1));
-                indices.push_back(getIndex(x, y + 1));
+                indices.push_back(GetIndex(x + 1, y));
+                indices.push_back(GetIndex(x + 1, y + 1));
+                indices.push_back(GetIndex(x, y + 1));
             }
         }
 

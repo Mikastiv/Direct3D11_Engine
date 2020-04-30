@@ -25,6 +25,7 @@ Sheet::Sheet(Graphics& gfx)
         model.vertices[1].tex = { 1.0f, 0.0f };
         model.vertices[2].tex = { 0.0f, 1.0f };
         model.vertices[3].tex = { 1.0f, 1.0f };
+
         AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
         AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile(L"directx.png")));
@@ -45,7 +46,7 @@ Sheet::Sheet(Graphics& gfx)
         // Input Layout bind
         const std::vector<D3D11_INPUT_ELEMENT_DESC> desc{
             { "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u },
-            { "TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0u, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0u }
+            { "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0u, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0u }
         };
 
         AddStaticBind(std::make_unique<InputLayout>(gfx, desc, pVSByteCode));

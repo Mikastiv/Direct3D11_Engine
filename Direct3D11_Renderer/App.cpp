@@ -1,6 +1,5 @@
 #include "App.hpp"
 #include "GDIPlusManager.hpp"
-#include "Surface.hpp"
 
 GDIPlusManager gdiManager;
 

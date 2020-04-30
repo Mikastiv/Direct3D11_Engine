@@ -231,11 +231,11 @@
     <ClCompile Include="Sampler.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sheet.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Bindable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
