@@ -42,37 +42,10 @@ Sheet::Sheet(Graphics& gfx)
         // Pixel Shader bind
         AddStaticBind(std::make_unique<PixelShader>(gfx, L"TexturePS.cso"));
 
-        // Constant buffer for face colors
-        struct ConstBufferColors
-        {
-            struct
-            {
-                float r;
-                float g;
-                float b;
-                float a;
-            } face_colors[8];
-        };
-        const ConstBufferColors cbufColors = { { { 1.0f, 0.0f, 0.0f },
-                                                 { 1.0f, 1.0f, 0.0f },
-                                                 { 1.0f, 0.0f, 1.0f },
-                                                 { 0.0f, 1.0f, 0.0f },
-                                                 { 0.0f, 1.0f, 1.0f },
-                                                 { 0.0f, 0.0f, 1.0f },
-                                                 { 0.5f, 0.5f, 0.5f },
-                                                 { 0.5f, 0.0f, 0.5f } } };
-        AddStaticBind(std::make_unique<PixelConstantBuffer<ConstBufferColors>>(gfx, cbufColors));
-
         // Input Layout bind
         const std::vector<D3D11_INPUT_ELEMENT_DESC> desc{
             { "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u },
-            { "TexCoord",
-              0,
-              DXGI_FORMAT_R32G32_FLOAT,
-              0u,
-              D3D11_APPEND_ALIGNED_ELEMENT,
-              D3D11_INPUT_PER_VERTEX_DATA,
-              0u }
+            { "TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0u, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0u }
         };
 
         AddStaticBind(std::make_unique<InputLayout>(gfx, desc, pVSByteCode));

@@ -2,35 +2,42 @@
 
 #include "IndexedTriangleList.hpp"
 
+#include <cassert>
+
 class Plane
 {
 public:
     template <typename T>
-    static auto Make(size_t tessellation = 1u) -> IndexedTriangleList<T>
+    static auto Make(size_t divisionX = 1u, size_t divisionY = 1u) -> IndexedTriangleList<T>
     {
-        const float size = 1.0f;
-        const float divisionSize = size / tessellation;
-        const size_t nVertexPerLine = tessellation + 1;
-        const DirectX::XMFLOAT3 bottomLeft{ -size / 2.0f, -size / 2.0f, 0.0f };
-        std::vector<T> vertices{};
+        assert(divisionX > 0);
+        assert(divisionY > 0);
 
-        const auto xValue = [=](size_t x) { return bottomLeft.x + (divisionSize * x); };
-        const auto yValue = [=](size_t y) { return bottomLeft.y + (divisionSize * y); };
-        for (size_t y = 0; y < nVertexPerLine; y++)
+        const float size = 1.0f;
+        const float divisionXSize = size / divisionX;
+        const float divisionYSize = size / divisionY;
+        const size_t nVerticesX = divisionX + 1;
+        const size_t nVerticesY = divisionY + 1;
+        const auto bottomLeft = DirectX::XMVectorSet(-size / 2.0f, size / 2.0f, 0.0f, 0.0f);
+        std::vector<T> vertices(nVerticesX * nVerticesY);
+
+        for (size_t y = 0, i = 0; y < nVerticesY; y++)
         {
-            for (size_t x = 0; x < nVertexPerLine; x++)
+            const auto yPos = (float)y * divisionYSize;
+            for (size_t x = 0; x < nVerticesX; x++, i++)
             {
-                vertices.emplace_back();
                 // Negative y to get topleft first (have same layout as uv coords)
-                vertices.back().pos = { xValue(x), -yValue(y), 0.0f };
+                const auto v =
+                    DirectX::XMVectorAdd(bottomLeft, DirectX::XMVectorSet((float)x * divisionXSize, -yPos, 0.0f, 0.0f));
+                DirectX::XMStoreFloat3(&vertices[i].pos, v);
             }
         }
 
         std::vector<uint16_t> indices{};
-        const auto getIndex = [=](size_t x, size_t y) { return uint16_t(y * nVertexPerLine + x); };
-        for (size_t y = 0; y < nVertexPerLine - 1; y++)
+        const auto getIndex = [=](size_t x, size_t y) { return uint16_t(y * nVerticesX + x); };
+        for (size_t y = 0; y < nVerticesY - 1; y++)
         {
-            for (size_t x = 0; x < nVertexPerLine - 1; x++)
+            for (size_t x = 0; x < nVerticesX - 1; x++)
             {
                 indices.push_back(getIndex(x, y));
                 indices.push_back(getIndex(x + 1, y));
