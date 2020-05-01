@@ -11,7 +11,8 @@ App::App()
         wnd.CreateGfx();
     }
     //boxes.push_back(std::make_unique<Box>(wnd.GetGfx()));
-    sheets.push_back(std::make_unique<Sheet>(wnd.GetGfx()));
+    //sheets.push_back(std::make_unique<Sheet>(wnd.GetGfx()));
+    sboxes.push_back(std::make_unique<SkinnedBox>(wnd.GetGfx()));
     const auto ar = (float)Graphics::ScreenHeight / (float)Graphics::ScreenWidth;
     wnd.GetGfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 40.0f));
 }
@@ -29,6 +30,11 @@ auto App::DoFrame() -> void
     {
         sheet->Update(deltaTime);
         sheet->Draw(wnd.GetGfx());
+    }
+    for (auto& box : sboxes)
+    {
+        box->Update(deltaTime);
+        box->Draw(wnd.GetGfx());
     }
     wnd.GetGfx().EndFrame();
 }

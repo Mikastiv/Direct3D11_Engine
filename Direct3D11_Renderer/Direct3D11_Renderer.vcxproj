@@ -124,6 +124,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sampler.hpp" />
     <ClInclude Include="Sheet.hpp" />
+    <ClInclude Include="SkinnedBox.hpp" />
     <ClInclude Include="Sphere.hpp" />
     <ClInclude Include="Surface.hpp" />
     <ClInclude Include="Texture.hpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Sheet.cpp" />
+    <ClCompile Include="SkinnedBox.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Topology.cpp" />
@@ -164,8 +166,9 @@
     <ResourceCompile Include="Direct3D11_Renderer.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="directx.png" />
     <Image Include="dx11.ico" />
+    <Image Include="Images\cube.png" />
+    <Image Include="Images\directx.png" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColorBlendPS.hlsl">

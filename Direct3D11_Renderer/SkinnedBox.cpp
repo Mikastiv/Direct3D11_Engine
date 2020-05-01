@@ -1,11 +1,11 @@
-#include "Sheet.hpp"
+#include "SkinnedBox.hpp"
 #include "BindableBase.hpp"
-#include "Plane.hpp"
+#include "Surface.hpp"
 #include "Texture.hpp"
 #include "Sampler.hpp"
-#include "Surface.hpp"
+#include "Cube.hpp"
 
-Sheet::Sheet(Graphics& gfx)
+SkinnedBox::SkinnedBox(Graphics& gfx)
 {
     struct Vertex
     {
@@ -14,21 +14,17 @@ Sheet::Sheet(Graphics& gfx)
         {
             float u;
             float v;
-        } tex;
+        } uv;
     };
 
     if (!IsStaticInitialized())
     {
         // Vertex Buffer bind
-        auto model = Plane::Make<Vertex>();
-        model.vertices[0].tex = { 0.0f, 0.0f };
-        model.vertices[1].tex = { 1.0f, 0.0f };
-        model.vertices[2].tex = { 0.0f, 1.0f };
-        model.vertices[3].tex = { 1.0f, 1.0f };
+        auto model = Cube::MakeSkinned<Vertex>();
 
         AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
-        AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile(L"Images\\directx.png")));
+        AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile(L"Images\\cube.png")));
 
         AddStaticBind(std::make_unique<Sampler>(gfx));
 
@@ -61,14 +57,15 @@ Sheet::Sheet(Graphics& gfx)
     AddBind(std::make_unique<TransformConstBuffer>(gfx, *this));
 }
 
-auto Sheet::Update(float deltaTime) noexcept -> void
+
+auto SkinnedBox::Update(float deltaTime) noexcept -> void
 {
     pitch = dPitch * deltaTime;
     yaw += dYaw * deltaTime;
     roll += dRoll * deltaTime;
 }
 
-auto Sheet::GetTransformXM() const noexcept -> DirectX::XMMATRIX
+auto SkinnedBox::GetTransformXM() const noexcept -> DirectX::XMMATRIX
 {
     return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f);
 }

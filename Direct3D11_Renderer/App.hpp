@@ -4,6 +4,7 @@
 #include "MikastivTimer.hpp"
 #include "Box.hpp"
 #include "Sheet.hpp"
+#include "SkinnedBox.hpp"
 
 class App
 {
@@ -27,4 +28,5 @@ private:
     Timer ft{};
     std::vector<std::unique_ptr<Box>> boxes{};
     std::vector<std::unique_ptr<Sheet>> sheets{};
+    std::vector<std::unique_ptr<SkinnedBox>> sboxes{};
 };

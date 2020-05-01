@@ -166,6 +166,9 @@
     <ClInclude Include="Sheet.hpp">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
+    <ClInclude Include="SkinnedBox.hpp">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MikastivException.cpp">
@@ -237,6 +240,9 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
+    <ClCompile Include="SkinnedBox.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Direct3D11_Renderer.rc">
@@ -247,7 +253,10 @@
     <Image Include="dx11.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="directx.png">
+    <Image Include="Images\cube.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Images\directx.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
