@@ -37,16 +37,15 @@ Box::Box(Graphics& gfx)
                 float a;
             } face_colors[8];
         };
-        const ConstBufferColors cbufColors = { {
-            { 1.0f, 0.0f, 0.0f },
-            { 1.0f, 1.0f, 0.0f },
-            { 1.0f, 0.0f, 1.0f },
-            { 0.0f, 1.0f, 0.0f },
-            { 0.0f, 1.0f, 1.0f },
-            { 0.0f, 0.0f, 1.0f },
-            { 0.5f, 0.5f, 0.5f },
-            { 0.5f, 0.0f, 0.5f }
-        } };
+        const ConstBufferColors cbufColors = { { { 1.0f, 0.0f, 0.0f },
+                                                 { 1.0f, 1.0f, 0.0f },
+                                                 { 1.0f, 0.0f, 1.0f },
+                                                 { 0.0f, 1.0f, 0.0f },
+                                                 { 0.0f, 1.0f, 1.0f },
+                                                 { 0.0f, 0.0f, 1.0f },
+                                                 { 0.5f, 0.5f, 0.5f },
+                                                 { 0.5f, 0.0f, 0.5f } } };
+
         AddStaticBind(std::make_unique<PixelConstantBuffer<ConstBufferColors>>(gfx, cbufColors));
 
         // Input Layout bind

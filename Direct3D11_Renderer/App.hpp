@@ -2,9 +2,7 @@
 
 #include "Window.hpp"
 #include "MikastivTimer.hpp"
-#include "Box.hpp"
-#include "Sheet.hpp"
-#include "SkinnedBox.hpp"
+#include "Drawable.hpp"
 
 class App
 {
@@ -26,7 +24,5 @@ private:
 private:
     Window wnd;
     Timer ft{};
-    std::vector<std::unique_ptr<Box>> boxes{};
-    std::vector<std::unique_ptr<Sheet>> sheets{};
-    std::vector<std::unique_ptr<SkinnedBox>> sboxes{};
+    std::vector<std::unique_ptr<Drawable>> drawables{};
 };
