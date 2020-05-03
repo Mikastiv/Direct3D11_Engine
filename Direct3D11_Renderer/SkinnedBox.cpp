@@ -41,12 +41,12 @@ SkinnedBox::SkinnedBox(Graphics& gfx,
         AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.indices));
 
         // Vertex Shader bind
-        auto pVertexShader = std::make_unique<VertexShader>(gfx, L"TextureVS.cso");
+        auto pVertexShader = std::make_unique<VertexShader>(gfx, L"Shaders\\ByteCode\\TextureVS.cso");
         auto pVSByteCode = pVertexShader->GetByteCode();
         AddStaticBind(std::move(pVertexShader));
 
         // Pixel Shader bind
-        AddStaticBind(std::make_unique<PixelShader>(gfx, L"TexturePS.cso"));
+        AddStaticBind(std::make_unique<PixelShader>(gfx, L"Shaders\\ByteCode\\TexturePS.cso"));
 
         // Input Layout bind
         const std::vector<D3D11_INPUT_ELEMENT_DESC> desc{

@@ -1,16 +1,16 @@
-#include "Box.hpp"
+#include "Globe.hpp"
 #include "BindableBase.hpp"
-#include "Cube.hpp"
+#include "IcoSphere.hpp"
 
-Box::Box(Graphics& gfx,
-         std::mt19937& rng,
-         std::uniform_real_distribution<float>& radiusDist,
-         std::uniform_real_distribution<float>& yRotOffsetDist,
-         std::uniform_real_distribution<float>& rotOffsetDist,
-         std::uniform_real_distribution<float>& dYRotationDist,
-         std::uniform_real_distribution<float>& dPitchDist,
-         std::uniform_real_distribution<float>& dYawDist,
-         std::uniform_real_distribution<float>& dRollDist)
+Globe::Globe(Graphics& gfx,
+             std::mt19937& rng,
+             std::uniform_real_distribution<float>& radiusDist,
+             std::uniform_real_distribution<float>& yRotOffsetDist,
+             std::uniform_real_distribution<float>& rotOffsetDist,
+             std::uniform_real_distribution<float>& dYRotationDist,
+             std::uniform_real_distribution<float>& dPitchDist,
+             std::uniform_real_distribution<float>& dYawDist,
+             std::uniform_real_distribution<float>& dRollDist)
     : TestObject(rng, radiusDist, yRotOffsetDist, rotOffsetDist, dYRotationDist, dPitchDist, dYawDist, dRollDist)
 {
     struct Vertex
@@ -21,7 +21,7 @@ Box::Box(Graphics& gfx,
     if (!IsStaticInitialized())
     {
         // Vertex Buffer bind
-        const auto model = Cube::Make<Vertex>();
+        const auto model = IcoSphere::Make<Vertex>();
         AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
         // Index Buffer bind
