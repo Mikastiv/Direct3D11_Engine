@@ -1,6 +1,10 @@
 #include "App.hpp"
 #include "GDIPlusManager.hpp"
 #include "SkinnedBox.hpp"
+#include "Box.hpp"
+
+#include <random>
+#include <algorithm>
 
 GDIPlusManager gdiManager;
 
@@ -11,11 +15,45 @@ App::App()
     {
         wnd.CreateGfx();
     }
-    // boxes.push_back(std::make_unique<Box>(wnd.GetGfx()));
-    // sheets.push_back(std::make_unique<Sheet>(wnd.GetGfx()));
-    drawables.push_back(std::make_unique<SkinnedBox>(wnd.GetGfx()));
+
+    std::mt19937 rng(std::random_device{}());
+    std::uniform_real_distribution<float> radiusDist(5.0f, 20.0f);
+    std::uniform_real_distribution<float> yRotDist(0.0f, DirectX::XM_2PI);
+    std::uniform_real_distribution<float> rotOffsetDist(-DirectX::XM_PIDIV4, DirectX::XM_PIDIV4);
+    std::uniform_real_distribution<float> dYRotDist(0.1f, DirectX::XM_PIDIV4);
+    std::uniform_real_distribution<float> modelRotDist(0.1f, DirectX::XM_PIDIV2);
+    std::uniform_int_distribution<int> typeDist(0, 1);
+
+    const auto GenerateTestObjects = [&]() -> std::unique_ptr<Drawable> {
+        switch (typeDist(rng))
+        {
+        case 0:
+            return std::make_unique<Box>(wnd.GetGfx(),
+                                         rng,
+                                         radiusDist,
+                                         yRotDist,
+                                         rotOffsetDist,
+                                         dYRotDist,
+                                         modelRotDist,
+                                         modelRotDist,
+                                         modelRotDist);
+        default:
+            return std::make_unique<SkinnedBox>(wnd.GetGfx(),
+                                                rng,
+                                                radiusDist,
+                                                yRotDist,
+                                                rotOffsetDist,
+                                                dYRotDist,
+                                                modelRotDist,
+                                                modelRotDist,
+                                                modelRotDist);
+        }
+    };
+
+    std::generate_n(std::back_inserter(drawables), 100, GenerateTestObjects);
+
     const auto ar = (float)Graphics::ScreenHeight / (float)Graphics::ScreenWidth;
-    wnd.GetGfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 40.0f));
+    wnd.GetGfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 100.0f));
 }
 
 auto App::DoFrame() -> void

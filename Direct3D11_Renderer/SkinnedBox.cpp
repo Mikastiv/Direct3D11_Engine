@@ -5,7 +5,16 @@
 #include "Sampler.hpp"
 #include "Cube.hpp"
 
-SkinnedBox::SkinnedBox(Graphics& gfx)
+SkinnedBox::SkinnedBox(Graphics& gfx,
+                       std::mt19937& rng,
+                       std::uniform_real_distribution<float>& radiusDist,
+                       std::uniform_real_distribution<float>& yRotOffsetDist,
+                       std::uniform_real_distribution<float>& rotOffsetDist,
+                       std::uniform_real_distribution<float>& dYRotationDist,
+                       std::uniform_real_distribution<float>& dPitchDist,
+                       std::uniform_real_distribution<float>& dYawDist,
+                       std::uniform_real_distribution<float>& dRollDist)
+    : TestObject(rng, radiusDist, yRotOffsetDist, rotOffsetDist, dYRotationDist, dPitchDist, dYawDist, dRollDist)
 {
     struct Vertex
     {
@@ -55,17 +64,4 @@ SkinnedBox::SkinnedBox(Graphics& gfx)
     }
 
     AddBind(std::make_unique<TransformConstBuffer>(gfx, *this));
-}
-
-
-auto SkinnedBox::Update(float deltaTime) noexcept -> void
-{
-    pitch = dPitch * deltaTime;
-    yaw += dYaw * deltaTime;
-    roll += dRoll * deltaTime;
-}
-
-auto SkinnedBox::GetTransformXM() const noexcept -> DirectX::XMMATRIX
-{
-    return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f);
 }

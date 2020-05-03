@@ -163,10 +163,10 @@
     <ClInclude Include="Texture.hpp">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="Sheet.hpp">
+    <ClInclude Include="SkinnedBox.hpp">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
-    <ClInclude Include="SkinnedBox.hpp">
+    <ClInclude Include="TestObject.hpp">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
   </ItemGroup>
@@ -233,9 +233,6 @@
     </ClCompile>
     <ClCompile Include="Sampler.cpp">
       <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
-    <ClCompile Include="Sheet.cpp">
-      <Filter>Source Files\Drawable</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Bindable</Filter>

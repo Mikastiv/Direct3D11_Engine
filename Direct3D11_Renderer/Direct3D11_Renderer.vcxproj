@@ -123,10 +123,10 @@
     <ClInclude Include="Prism.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sampler.hpp" />
-    <ClInclude Include="Sheet.hpp" />
     <ClInclude Include="SkinnedBox.hpp" />
     <ClInclude Include="Sphere.hpp" />
     <ClInclude Include="Surface.hpp" />
+    <ClInclude Include="TestObject.hpp" />
     <ClInclude Include="Texture.hpp" />
     <ClInclude Include="Topology.hpp" />
     <ClInclude Include="TransformConstBuffer.hpp" />
@@ -151,7 +151,6 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Sampler.cpp" />
-    <ClCompile Include="Sheet.cpp" />
     <ClCompile Include="SkinnedBox.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Texture.cpp" />

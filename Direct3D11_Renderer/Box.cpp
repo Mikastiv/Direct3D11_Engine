@@ -2,7 +2,16 @@
 #include "BindableBase.hpp"
 #include "Cube.hpp"
 
-Box::Box(Graphics& gfx)
+Box::Box(Graphics& gfx,
+         std::mt19937& rng,
+         std::uniform_real_distribution<float>& radiusDist,
+         std::uniform_real_distribution<float>& yRotOffsetDist,
+         std::uniform_real_distribution<float>& rotOffsetDist,
+         std::uniform_real_distribution<float>& dYRotationDist,
+         std::uniform_real_distribution<float>& dPitchDist,
+         std::uniform_real_distribution<float>& dYawDist,
+         std::uniform_real_distribution<float>& dRollDist)
+    : TestObject(rng, radiusDist, yRotOffsetDist, rotOffsetDist, dYRotationDist, dPitchDist, dYawDist, dRollDist)
 {
     struct Vertex
     {
@@ -63,16 +72,4 @@ Box::Box(Graphics& gfx)
     }
 
     AddBind(std::make_unique<TransformConstBuffer>(gfx, *this));
-}
-
-auto Box::Update(float deltaTime) noexcept -> void
-{
-    pitch = dPitch * deltaTime;
-    yaw += dYaw * deltaTime;
-    roll += dRoll * deltaTime;
-}
-
-auto Box::GetTransformXM() const noexcept -> DirectX::XMMATRIX
-{
-    return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(0.0f, 0.0f, 5.0f);
 }
