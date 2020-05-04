@@ -161,6 +161,8 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
         return true;
     }
 
+    const auto imguiIO = ImGui::GetIO();
+
     switch (msg)
     {
     case WM_CLOSE:
@@ -180,7 +182,11 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
         [[fallthrough]];
     case WM_SYSKEYDOWN:
     {
-        // Autorepeat is bit 30 flag in l_param
+        if (imguiIO.WantCaptureKeyboard)
+        {
+            break;
+        }
+        // Autorepeat is bit 30 flag in lParam
         if (!(lParam & (0b1 << 30)) || kbd.AutorepeatIsEnabled())
         {
             kbd.OnKeyPress(static_cast<unsigned char>(wParam));
@@ -191,11 +197,19 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
         [[fallthrough]];
     case WM_SYSKEYUP:
     {
+        if (imguiIO.WantCaptureKeyboard)
+        {
+            break;
+        }
         kbd.OnKeyRelease(static_cast<unsigned char>(wParam));
         break;
     }
     case WM_CHAR:
     {
+        if (imguiIO.WantCaptureKeyboard)
+        {
+            break;
+        }
         kbd.OnChar(static_cast<unsigned char>(wParam));
         break;
     }
@@ -206,6 +220,11 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
         // -------------------------------------------------------
     case WM_MOUSEMOVE:
     {
+        if (imguiIO.WantCaptureMouse)
+        {
+            break;
+        }
+
         const POINTS pt = MAKEPOINTS(lParam);
         // in client region -> log move, and log enter + capture mouse (if not previously in window)
         if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height)
@@ -235,25 +254,41 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
     }
     case WM_LBUTTONDOWN:
     {
+        SetForegroundWindow(hWnd);
+        if (imguiIO.WantCaptureMouse)
+        {
+            break;
+        }
         const POINTS pt = MAKEPOINTS(lParam);
         mouse.OnLeftPressed(pt.x, pt.y);
-        SetForegroundWindow(hWnd);
         break;
     }
     case WM_RBUTTONDOWN:
     {
+        if (imguiIO.WantCaptureMouse)
+        {
+            break;
+        }
         const POINTS pt = MAKEPOINTS(lParam);
         mouse.OnRightPressed(pt.x, pt.y);
         break;
     }
     case WM_MBUTTONDOWN:
     {
+        if (imguiIO.WantCaptureMouse)
+        {
+            break;
+        }
         const POINTS pt = MAKEPOINTS(lParam);
         mouse.OnMiddlePressed(pt.x, pt.y);
         break;
     }
     case WM_LBUTTONUP:
     {
+        if (imguiIO.WantCaptureMouse)
+        {
+            break;
+        }
         const POINTS pt = MAKEPOINTS(lParam);
         mouse.OnLeftReleased(pt.x, pt.y);
         // release mouse if outside of window
@@ -266,6 +301,10 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
     }
     case WM_RBUTTONUP:
     {
+        if (imguiIO.WantCaptureMouse)
+        {
+            break;
+        }
         const POINTS pt = MAKEPOINTS(lParam);
         mouse.OnRightReleased(pt.x, pt.y);
         if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
@@ -277,6 +316,10 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
     }
     case WM_MBUTTONUP:
     {
+        if (imguiIO.WantCaptureMouse)
+        {
+            break;
+        }
         const POINTS pt = MAKEPOINTS(lParam);
         mouse.OnMiddleReleased(pt.x, pt.y);
         if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
@@ -288,6 +331,10 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
     }
     case WM_MOUSEWHEEL:
     {
+        if (imguiIO.WantCaptureMouse)
+        {
+            break;
+        }
         const POINTS pt = MAKEPOINTS(lParam);
         const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
         mouse.OnWheelDelta(pt.x, pt.y, delta);
