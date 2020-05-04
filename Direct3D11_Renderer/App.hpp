@@ -3,6 +3,7 @@
 #include "Window.hpp"
 #include "MikastivTimer.hpp"
 #include "Drawable.hpp"
+#include "ImGuiManager.hpp"
 
 class App
 {
@@ -22,6 +23,7 @@ private:
     static constexpr const wchar_t* windowTitle = L"Direct3D 11 Engine";
 
 private:
+    ImGuiManager imgui{};
     Window wnd;
     Timer ft{};
     std::vector<std::unique_ptr<Drawable>> drawables{};

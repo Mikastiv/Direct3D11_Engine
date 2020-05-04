@@ -2,6 +2,9 @@
 #include "GDIPlusManager.hpp"
 #include "SkinnedBox.hpp"
 #include "Globe.hpp"
+#include "imgui/imgui_impl_dx11.h"
+#include "imgui/imgui_impl_win32.h"
+#include "imgui/imgui.h"
 
 #include <random>
 #include <algorithm>
@@ -65,6 +68,19 @@ auto App::DoFrame() -> void
         d->Update(deltaTime);
         d->Draw(wnd.GetGfx());
     }
+
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+
+    bool showDemoWindow = true;
+    if (showDemoWindow)
+    {
+        ImGui::ShowDemoWindow(&showDemoWindow);
+    }
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
     wnd.GetGfx().EndFrame();
 }
 

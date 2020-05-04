@@ -58,7 +58,7 @@ public:
     explicit Graphics(HWND hWnd);
     Graphics(const Graphics&) = delete;
     Graphics(Graphics&&) = delete;
-    ~Graphics() = default;
+    ~Graphics();
     auto operator=(const Graphics&) -> Graphics& = delete;
     auto operator=(Graphics &&) -> Graphics& = delete;
     auto EndFrame() -> void;

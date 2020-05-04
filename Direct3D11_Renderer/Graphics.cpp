@@ -1,6 +1,7 @@
 #include "Graphics.hpp"
 #include "Helpers.hpp"
 #include "GraphicsMacros.hpp"
+#include "imgui/imgui_impl_dx11.h"
 
 #include <sstream>
 #include <d3dcompiler.h>
@@ -170,6 +171,13 @@ Graphics::Graphics(HWND hWnd)
 
     D3D11_VIEWPORT vp[]{ { 0.0f, 0.0f, (FLOAT)ScreenWidth, (FLOAT)ScreenHeight, 0.0f, 1.0f } };
     pContext->RSSetViewports(1u, &vp[0]);
+
+    ImGui_ImplDX11_Init(pDevice.Get(), pContext.Get());
+}
+
+Graphics::~Graphics()
+{
+    ImGui_ImplDX11_Shutdown();
 }
 
 auto Graphics::EndFrame() -> void
@@ -179,7 +187,7 @@ auto Graphics::EndFrame() -> void
     infoManager.Set();
 #endif
 
-    if (FAILED(hr = pSwap->Present(1u, 0u)))
+    if (FAILED(hr = pSwap->Present(0u, 0u)))
     {
         if (hr == DXGI_ERROR_DEVICE_REMOVED)
         {

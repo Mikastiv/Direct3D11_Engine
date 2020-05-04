@@ -2,6 +2,7 @@
 #include "Helpers.hpp"
 #include "WindowMacros.hpp"
 #include "resource.h"
+#include "imgui/imgui_impl_win32.h"
 
 #include <sstream>
 
@@ -69,10 +70,13 @@ Window::Window(int width, int height, const wchar_t* name)
                         this);
 
     ShowWindow(hWnd, SW_SHOWDEFAULT);
+
+    ImGui_ImplWin32_Init(hWnd);
 }
 
 Window::~Window()
 {
+    ImGui_ImplWin32_Shutdown();
     DestroyWindow(hWnd);
 }
 
@@ -150,6 +154,13 @@ auto Window::ProcessMessages() noexcept -> std::optional<int>
 
 auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept -> LRESULT
 {
+    extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+    {
+        return true;
+    }
+
     switch (msg)
     {
     case WM_CLOSE:

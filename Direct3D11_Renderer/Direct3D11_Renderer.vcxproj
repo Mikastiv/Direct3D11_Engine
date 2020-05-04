@@ -112,6 +112,7 @@
     <ClInclude Include="GraphicsMacros.hpp" />
     <ClInclude Include="Helpers.hpp" />
     <ClInclude Include="IcoSphere.hpp" />
+    <ClInclude Include="ImGuiManager.hpp" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
@@ -154,6 +155,7 @@
     <ClCompile Include="GDIPlusManager.cpp" />
     <ClCompile Include="Globe.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
