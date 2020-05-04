@@ -23,6 +23,9 @@ private:
     static constexpr const wchar_t* windowTitle = L"Direct3D 11 Engine";
 
 private:
+    static constexpr uint32_t nDrawables = 200;
+    bool showDemoWindow = false;
+    float speedFactor = 1.0f;
     ImGuiManager imgui{};
     Window wnd;
     Timer ft{};

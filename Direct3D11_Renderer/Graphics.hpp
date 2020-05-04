@@ -62,16 +62,20 @@ public:
     auto operator=(const Graphics&) -> Graphics& = delete;
     auto operator=(Graphics &&) -> Graphics& = delete;
     auto EndFrame() -> void;
-    auto ClearBuffer(float red, float green, float blue) noexcept -> void;
+    auto BeginFrame(float red, float green, float blue) noexcept -> void;
     auto DrawIndexed(UINT count) noexcept(!IS_DEBUG) -> void;
     auto SetProjection(DirectX::FXMMATRIX proj) noexcept -> void;
     auto GetProjection() const noexcept -> DirectX::XMMATRIX;
+    auto EnableImGui() noexcept -> void;
+    auto DisableImGui() noexcept -> void;
+    auto IsImGuiEnabled() const noexcept -> bool;
 
 public:
     static constexpr int ScreenWidth = 1280;
     static constexpr int ScreenHeight = 720;
 
 private:
+    bool imguiEnabled = true;
     DirectX::XMMATRIX projection{};
 #ifndef NDEBUG
     DXGIInfoManager infoManager{};

@@ -2,8 +2,6 @@
 #include "GDIPlusManager.hpp"
 #include "SkinnedBox.hpp"
 #include "Globe.hpp"
-#include "imgui/imgui_impl_dx11.h"
-#include "imgui/imgui_impl_win32.h"
 #include "imgui/imgui.h"
 
 #include <random>
@@ -53,7 +51,7 @@ App::App()
         }
     };
 
-    std::generate_n(std::back_inserter(drawables), 200, GenerateTestObjects);
+    std::generate_n(std::back_inserter(drawables), nDrawables, GenerateTestObjects);
 
     const auto ar = (float)Graphics::ScreenHeight / (float)Graphics::ScreenWidth;
     wnd.GetGfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 60.0f));
@@ -61,25 +59,27 @@ App::App()
 
 auto App::DoFrame() -> void
 {
-    const float deltaTime = ft.Mark();
-    wnd.GetGfx().ClearBuffer(0.0f, 0.0f, 0.0f);
+    const float deltaTime = ft.Mark() * speedFactor;
+    wnd.GetGfx().BeginFrame(0.0f, 0.0f, 0.0f);
     for (auto& d : drawables)
     {
         d->Update(deltaTime);
         d->Draw(wnd.GetGfx());
     }
 
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
-
-    bool showDemoWindow = true;
     if (showDemoWindow)
     {
         ImGui::ShowDemoWindow(&showDemoWindow);
     }
-    ImGui::Render();
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+    ImGui::SetNextWindowSize({170.0f, 90.0f});
+    if (ImGui::Begin("Simulation Speed"))
+    {
+        ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
+        ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+        ImGui::SliderFloat("Speed", &speedFactor, 0.0f, 5.0f, "%.2f");
+    }
+    ImGui::End();
 
     wnd.GetGfx().EndFrame();
 }

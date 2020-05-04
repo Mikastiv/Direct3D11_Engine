@@ -2,6 +2,7 @@
 #include "Helpers.hpp"
 #include "GraphicsMacros.hpp"
 #include "imgui/imgui_impl_dx11.h"
+#include "imgui/imgui_impl_win32.h"
 
 #include <sstream>
 #include <d3dcompiler.h>
@@ -182,6 +183,12 @@ Graphics::~Graphics()
 
 auto Graphics::EndFrame() -> void
 {
+    if (imguiEnabled)
+    {
+        ImGui::Render();
+        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    }
+
     HRESULT hr{};
 #ifndef NDEBUG
     infoManager.Set();
@@ -197,8 +204,15 @@ auto Graphics::EndFrame() -> void
     }
 }
 
-auto Graphics::ClearBuffer(float red, float green, float blue) noexcept -> void
+auto Graphics::BeginFrame(float red, float green, float blue) noexcept -> void
 {
+    if (imguiEnabled)
+    {
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+    }
+
     const std::array<float, 4> color = { red, green, blue, 1.0f };
     pContext->ClearRenderTargetView(pTarget.Get(), color.data());
     pContext->ClearDepthStencilView(pDsv.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
@@ -218,6 +232,21 @@ auto Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept -> void
 auto Graphics::GetProjection() const noexcept -> DirectX::XMMATRIX
 {
     return projection;
+}
+
+auto Graphics::EnableImGui() noexcept -> void
+{
+    imguiEnabled = true;
+}
+
+auto Graphics::DisableImGui() noexcept -> void
+{
+    imguiEnabled = false;
+}
+
+auto Graphics::IsImGuiEnabled() const noexcept -> bool
+{
+    return imguiEnabled;
 }
 
 Graphics::InfoException::InfoException(int line, const char* file, std::vector<std::string> infoMsgs) noexcept
