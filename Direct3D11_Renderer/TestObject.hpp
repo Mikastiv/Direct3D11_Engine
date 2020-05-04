@@ -36,8 +36,7 @@ public:
     {
         return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
                DirectX::XMMatrixTranslation(rotationRadius, 0.0f, 0.0f) *
-               DirectX::XMMatrixRotationRollPitchYaw(rotationOffset, yRotation, rotationOffset) *
-               DirectX::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
+               DirectX::XMMatrixRotationRollPitchYaw(rotationOffset, yRotation, rotationOffset);
     }
 
 private:

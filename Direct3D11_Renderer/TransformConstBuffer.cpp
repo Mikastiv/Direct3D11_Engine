@@ -11,6 +11,7 @@ TransformConstBuffer::TransformConstBuffer(Graphics& gfx, const Drawable& parent
 
 auto TransformConstBuffer::Bind(Graphics& gfx) noexcept -> void
 {
-    pVertexCBuffer->Update(gfx, DirectX::XMMatrixTranspose(parent.GetTransformXM() * gfx.GetProjection()));
+    pVertexCBuffer->Update(
+        gfx, DirectX::XMMatrixTranspose(parent.GetTransformXM() * gfx.GetCameraView() * gfx.GetProjection()));
     pVertexCBuffer->Bind(gfx);
 }
