@@ -97,6 +97,7 @@
     <ClInclude Include="Bindable.hpp" />
     <ClInclude Include="BindableBase.hpp" />
     <ClInclude Include="Box.hpp" />
+    <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Color.hpp" />
     <ClInclude Include="Cone.hpp" />
     <ClInclude Include="ConstantBuffers.hpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Bindable.cpp" />
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DXGIInfoManager.cpp" />
     <ClCompile Include="GDIPlusManager.cpp" />

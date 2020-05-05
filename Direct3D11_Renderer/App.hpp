@@ -4,6 +4,7 @@
 #include "MikastivTimer.hpp"
 #include "Drawable.hpp"
 #include "ImGuiManager.hpp"
+#include "Camera.hpp"
 
 class App
 {
@@ -29,5 +30,6 @@ private:
     ImGuiManager imgui{};
     Window wnd;
     Timer ft{};
+    Camera camera{};
     std::vector<std::unique_ptr<Drawable>> drawables{};
 };

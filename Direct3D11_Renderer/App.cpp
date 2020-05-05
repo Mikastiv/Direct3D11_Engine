@@ -30,14 +30,14 @@ App::App()
         {
         case 0:
             return std::make_unique<Globe>(wnd.GetGfx(),
-                                         rng,
-                                         radiusDist,
-                                         yRotDist,
-                                         rotOffsetDist,
-                                         dYRotDist,
-                                         modelRotDist,
-                                         modelRotDist,
-                                         modelRotDist);
+                                           rng,
+                                           radiusDist,
+                                           yRotDist,
+                                           rotOffsetDist,
+                                           dYRotDist,
+                                           modelRotDist,
+                                           modelRotDist,
+                                           modelRotDist);
         default:
             return std::make_unique<SkinnedBox>(wnd.GetGfx(),
                                                 rng,
@@ -55,14 +55,13 @@ App::App()
 
     const auto ar = (float)Graphics::ScreenHeight / (float)Graphics::ScreenWidth;
     wnd.GetGfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 60.0f));
-    wnd.GetGfx().SetCameraView(
-        DirectX::XMMatrixLookAtLH({ 0.0f, 0.0f, -20.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }));
 }
 
 auto App::DoFrame() -> void
 {
     const float deltaTime = ft.Mark() * speedFactor;
     wnd.GetGfx().BeginFrame(0.0f, 0.0f, 0.0f);
+    wnd.GetGfx().SetCameraView(camera.GetViewMatrix());
     for (auto& d : drawables)
     {
         d->Update(deltaTime);
@@ -74,7 +73,7 @@ auto App::DoFrame() -> void
         ImGui::ShowDemoWindow(&showDemoWindow);
     }
 
-    ImGui::SetNextWindowSize({170.0f, 90.0f});
+    ImGui::SetNextWindowSize({ 170.0f, 90.0f });
     if (ImGui::Begin("Simulation Speed"))
     {
         ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
@@ -82,6 +81,8 @@ auto App::DoFrame() -> void
         ImGui::SliderFloat("Speed", &speedFactor, 0.0f, 5.0f, "%.2f");
     }
     ImGui::End();
+
+    camera.ShowControlWindow();
 
     wnd.GetGfx().EndFrame();
 }

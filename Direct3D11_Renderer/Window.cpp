@@ -161,7 +161,7 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
         return true;
     }
 
-    const auto imguiIO = ImGui::GetIO();
+    const auto& imguiIO = ImGui::GetIO();
 
     switch (msg)
     {
