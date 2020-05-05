@@ -17,50 +17,37 @@ Box::Box(
     struct Vertex
     {
         DirectX::XMFLOAT3 pos;
+        DirectX::XMFLOAT3 n;
     };
 
     if (!IsStaticInitialized())
     {
         // Vertex Buffer bind
-        const auto model = Cube::Make<Vertex>();
+        auto model = Cube::MakeIndependent<Vertex>();
+        model.SetFlatNormals();
         AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
         // Index Buffer bind
         AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.indices));
 
         // Vertex Shader bind
-        auto pVertexShader = std::make_unique<VertexShader>(gfx, L"Shaders\\ByteCode\\ColorIndexVS.cso");
+        auto pVertexShader = std::make_unique<VertexShader>(gfx, L"Shaders\\ByteCode\\PhongVS.cso");
         auto pVSByteCode = pVertexShader->GetByteCode();
         AddStaticBind(std::move(pVertexShader));
 
         // Pixel Shader bind
-        AddStaticBind(std::make_unique<PixelShader>(gfx, L"Shaders\\ByteCode\\ColorIndexPS.cso"));
-
-        // Constant buffer for face colors
-        struct ConstBufferColors
-        {
-            struct
-            {
-                float r;
-                float g;
-                float b;
-                float a;
-            } face_colors[8];
-        };
-        const ConstBufferColors cbufColors = { { { 1.0f, 0.0f, 0.0f },
-                                                 { 1.0f, 1.0f, 0.0f },
-                                                 { 1.0f, 0.0f, 1.0f },
-                                                 { 0.0f, 1.0f, 0.0f },
-                                                 { 0.0f, 1.0f, 1.0f },
-                                                 { 0.0f, 0.0f, 1.0f },
-                                                 { 0.5f, 0.5f, 0.5f },
-                                                 { 0.5f, 0.0f, 0.5f } } };
-
-        AddStaticBind(std::make_unique<PixelConstantBuffer<ConstBufferColors>>(gfx, cbufColors));
+        AddStaticBind(std::make_unique<PixelShader>(gfx, L"Shaders\\ByteCode\\PhongPS.cso"));
 
         // Input Layout bind
         const std::vector<D3D11_INPUT_ELEMENT_DESC> desc{
-            { "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u }
+            { "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0u, 0u, D3D11_INPUT_PER_VERTEX_DATA, 0u },
+            { "Normal",
+              0,
+              DXGI_FORMAT_R32G32B32_FLOAT,
+              0u,
+              D3D11_APPEND_ALIGNED_ELEMENT,
+              D3D11_INPUT_PER_VERTEX_DATA,
+              0u }
         };
 
         AddStaticBind(std::make_unique<InputLayout>(gfx, desc, pVSByteCode));

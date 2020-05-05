@@ -1,7 +1,6 @@
 #include "App.hpp"
 #include "GDIPlusManager.hpp"
-#include "SkinnedBox.hpp"
-#include "Globe.hpp"
+#include "Box.hpp"
 #include "imgui/imgui.h"
 
 #include <random>
@@ -28,19 +27,8 @@ App::App()
     const auto GenerateTestObjects = [&]() -> std::unique_ptr<Drawable> {
         switch (typeDist(rng))
         {
-        case 0:
-            return std::make_unique<Globe>(
-                wnd.GetGfx(),
-                rng,
-                radiusDist,
-                yRotDist,
-                rotOffsetDist,
-                dYRotDist,
-                modelRotDist,
-                modelRotDist,
-                modelRotDist);
         default:
-            return std::make_unique<SkinnedBox>(
+            return std::make_unique<Box>(
                 wnd.GetGfx(),
                 rng,
                 radiusDist,
@@ -64,11 +52,16 @@ auto App::DoFrame() -> void
     const float deltaTime = ft.Mark() * speedFactor;
     wnd.GetGfx().BeginFrame(0.0f, 0.0f, 0.0f);
     wnd.GetGfx().SetCameraView(camera.GetViewMatrix());
+    PointLight light(wnd.GetGfx());
+    light.SetPos(lightPos);
+    light.Bind(wnd.GetGfx());
+
     for (auto& d : drawables)
     {
         d->Update(deltaTime);
         d->Draw(wnd.GetGfx());
     }
+    light.Draw(wnd.GetGfx());
 
     if (showDemoWindow)
     {
@@ -85,6 +78,8 @@ auto App::DoFrame() -> void
     ImGui::End();
 
     camera.ShowControlWindow();
+    light.ShowControlWindow();
+    lightPos = light.GetPos();
 
     wnd.GetGfx().EndFrame();
 }

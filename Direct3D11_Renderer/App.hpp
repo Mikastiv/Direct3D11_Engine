@@ -5,6 +5,7 @@
 #include "Drawable.hpp"
 #include "ImGuiManager.hpp"
 #include "Camera.hpp"
+#include "PointLight.hpp"
 
 class App
 {
@@ -31,5 +32,6 @@ private:
     Window wnd;
     Timer ft{};
     Camera camera{};
+    DirectX::XMFLOAT3 lightPos{};
     std::vector<std::unique_ptr<Drawable>> drawables{};
 };
