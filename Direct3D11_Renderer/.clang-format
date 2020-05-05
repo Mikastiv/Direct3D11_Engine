@@ -1,14 +1,18 @@
 BasedOnStyle: Microsoft
 AccessModifierOffset: -4
-#AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: AlwaysBreak
 #AlignConsecutiveAssignments: false
 #AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: true
 #AlignEscapedNewlines: Right
 #AlignOperands: true
 #AlignTrailingComments: true
-AllowAllParametersOfDeclarationOnNextLine: false
+#AllowAllArgumentsOnNextLine: true
+AllowAllConstructorInitializersOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: false
 #AllowShortCaseLabelsOnASingleLine: false
+#AllowShortEnumsOnASingleLine: false
 #AllowShortFunctionsOnASingleLine: None
 #AllowShortIfStatementsOnASingleLine: false
 #AllowShortLambdasOnASingleLine: All
@@ -22,7 +26,6 @@ BinPackParameters: false
 BreakBeforeBraces: Allman
 #BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
-BreakInheritanceList: BeforeComma
 #BreakStringLiterals: true
 ColumnLimit: 120
 #CompactNamespaces: true
@@ -35,7 +38,9 @@ Cpp11BracedListStyle: false
 ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: false
 IncludeBlocks: Preserve
+#IndentCaseBlocks: false
 #IndentCaseLabels: false
+#IndentGotoLabels: false
 #IndentPPDirectives: None
 IndentWidth: 4
 #IndentWrappedFunctionNames: false
@@ -66,6 +71,6 @@ SpacesInContainerLiterals: false
 #SpacesInCStyleCastParentheses: false
 #SpacesInParentheses: false
 #SpacesInSquareBrackets: false
-Standard: Cpp11
+Standard: Auto
 TabWidth: 4
 UseTab: Never

@@ -10,7 +10,7 @@ public:
     Bindable(Bindable&&) = delete;
     virtual ~Bindable() = default;
     auto operator=(const Bindable&) -> Bindable& = delete;
-    auto operator=(Bindable&&) -> Bindable& = delete;
+    auto operator=(Bindable &&) -> Bindable& = delete;
     virtual auto Bind(Graphics& gfx) noexcept -> void = 0;
 
 protected:

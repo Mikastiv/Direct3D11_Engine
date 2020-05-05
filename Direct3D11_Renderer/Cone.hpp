@@ -25,8 +25,9 @@ public:
         for (size_t i = 0; i < divisions; i++)
         {
             vertices.emplace_back();
-            DirectX::XMStoreFloat3(&vertices.back().pos,
-                                   DirectX::XMVector3Transform(baseVector, DirectX::XMMatrixRotationY(angleStep * i)));
+            DirectX::XMStoreFloat3(
+                &vertices.back().pos,
+                DirectX::XMVector3Transform(baseVector, DirectX::XMMatrixRotationY(angleStep * i)));
         }
 
         std::vector<uint16_t> indices{};

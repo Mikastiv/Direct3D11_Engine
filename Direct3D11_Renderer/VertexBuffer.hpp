@@ -26,6 +26,7 @@ public:
         GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&desc, &data, &pVertexBuffer));
     }
     auto Bind(Graphics& gfx) noexcept -> void override;
+
 protected:
     UINT stride{};
     UINT offset = 0u;

@@ -29,25 +29,27 @@ App::App()
         switch (typeDist(rng))
         {
         case 0:
-            return std::make_unique<Globe>(wnd.GetGfx(),
-                                           rng,
-                                           radiusDist,
-                                           yRotDist,
-                                           rotOffsetDist,
-                                           dYRotDist,
-                                           modelRotDist,
-                                           modelRotDist,
-                                           modelRotDist);
+            return std::make_unique<Globe>(
+                wnd.GetGfx(),
+                rng,
+                radiusDist,
+                yRotDist,
+                rotOffsetDist,
+                dYRotDist,
+                modelRotDist,
+                modelRotDist,
+                modelRotDist);
         default:
-            return std::make_unique<SkinnedBox>(wnd.GetGfx(),
-                                                rng,
-                                                radiusDist,
-                                                yRotDist,
-                                                rotOffsetDist,
-                                                dYRotDist,
-                                                modelRotDist,
-                                                modelRotDist,
-                                                modelRotDist);
+            return std::make_unique<SkinnedBox>(
+                wnd.GetGfx(),
+                rng,
+                radiusDist,
+                yRotDist,
+                rotOffsetDist,
+                dYRotDist,
+                modelRotDist,
+                modelRotDist,
+                modelRotDist);
         }
     };
 

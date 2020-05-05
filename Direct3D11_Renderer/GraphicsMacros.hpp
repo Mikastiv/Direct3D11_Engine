@@ -13,10 +13,10 @@
     throw Graphics::HrException(__LINE__, __FILE__, hr)
 
 #ifdef NDEBUG
-#define GFX_EXCEPT(hr) Graphics::HrException(__LINE__, __FILE__, hr)
-#define GFX_THROW_INFO(hrcall) GFX_THROW_NOINFO(hrcall)
+#define GFX_EXCEPT(hr)                Graphics::HrException(__LINE__, __FILE__, hr)
+#define GFX_THROW_INFO(hrcall)        GFX_THROW_NOINFO(hrcall)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException(__LINE__, __FILE__, hr)
-#define GFX_THROW_INFO_ONLY(fn_call) fn_call
+#define GFX_THROW_INFO_ONLY(fn_call)  fn_call
 #else
 #define GFX_EXCEPT(hr) Graphics::HrException(__LINE__, __FILE__, hr, infoManager.GetMessages())
 #define GFX_THROW_INFO(hrcall)                                                                                         \

@@ -8,8 +8,7 @@ class Sphere
 {
 public:
     template <typename T>
-    static auto Make(uint16_t latDivisions = 10u, uint16_t lonDivisions = 20u)
-        -> IndexedTriangleList<T>
+    static auto Make(uint16_t latDivisions = 10u, uint16_t lonDivisions = 20u) -> IndexedTriangleList<T>
     {
         const float radius = 1.0f;
         const auto baseVector = DirectX::XMVectorSet(0.0f, radius, 0.0f, 0.0f);

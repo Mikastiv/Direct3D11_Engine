@@ -3,8 +3,8 @@
 
 auto Camera::GetViewMatrix() const noexcept -> DirectX::XMMATRIX
 {
-    const auto pos = DirectX::XMVector3Transform(DirectX::XMVectorSet(0.0f, 0.0f, -r, 0.0f),
-                                                 DirectX::XMMatrixRotationRollPitchYaw(xRotation, -yRotation, 0.0f));
+    const auto pos = DirectX::XMVector3Transform(
+        DirectX::XMVectorSet(0.0f, 0.0f, -r, 0.0f), DirectX::XMMatrixRotationRollPitchYaw(xRotation, -yRotation, 0.0f));
     return DirectX::XMMatrixLookAtLH(pos, DirectX::XMVectorZero(), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)) *
            DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 }

@@ -57,17 +57,18 @@ Window::Window(int width, int height, const wchar_t* name)
         throw MKWND_LAST_EXCEPT();
     }
 
-    hWnd = CreateWindow(WindowClass::GetName(),
-                        name,
-                        WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-                        CW_USEDEFAULT,
-                        CW_USEDEFAULT,
-                        wr.right - wr.left,
-                        wr.bottom - wr.top,
-                        nullptr,
-                        nullptr,
-                        WindowClass::GetInstance(),
-                        this);
+    hWnd = CreateWindow(
+        WindowClass::GetName(),
+        name,
+        WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+        CW_USEDEFAULT,
+        CW_USEDEFAULT,
+        wr.right - wr.left,
+        wr.bottom - wr.top,
+        nullptr,
+        nullptr,
+        WindowClass::GetInstance(),
+        this);
 
     ShowWindow(hWnd, SW_SHOWDEFAULT);
 
@@ -351,14 +352,14 @@ auto Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexce
 auto Window::Exception::translate_error_code(HRESULT hr) noexcept -> std::string
 {
     wchar_t* pMsgBuf = nullptr;
-    const DWORD msgLen =
-        FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                      nullptr,
-                      hr,
-                      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                      reinterpret_cast<LPWSTR>(&pMsgBuf),
-                      0,
-                      nullptr);
+    const DWORD msgLen = FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+        nullptr,
+        hr,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        reinterpret_cast<LPWSTR>(&pMsgBuf),
+        0,
+        nullptr);
 
     if (msgLen == 0)
     {

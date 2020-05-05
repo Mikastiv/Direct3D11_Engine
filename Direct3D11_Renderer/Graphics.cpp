@@ -60,14 +60,14 @@ auto Graphics::HrException::GetErrorCode() const noexcept -> HRESULT
 auto Graphics::HrException::GetErrorDescription() const noexcept -> std::string
 {
     wchar_t* pMsgBuf = nullptr;
-    const DWORD msgLen =
-        FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                      nullptr,
-                      hr,
-                      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                      reinterpret_cast<LPWSTR>(&pMsgBuf),
-                      0,
-                      nullptr);
+    const DWORD msgLen = FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+        nullptr,
+        hr,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        reinterpret_cast<LPWSTR>(&pMsgBuf),
+        0,
+        nullptr);
 
     if (msgLen == 0)
     {
@@ -87,10 +87,8 @@ auto Graphics::HrException::GetErrorInfo() const noexcept -> std::string
     return info;
 }
 
-Graphics::DeviceRemovedException::DeviceRemovedException(int line,
-                                                         const char* file,
-                                                         HRESULT hr,
-                                                         std::vector<std::string> infoMsgs) noexcept
+Graphics::DeviceRemovedException::DeviceRemovedException(
+    int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs) noexcept
     : HrException(line, file, hr, std::move(infoMsgs))
 {
 }
@@ -125,18 +123,19 @@ Graphics::Graphics(HWND hWnd)
 #endif
 
     HRESULT hr{};
-    GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(nullptr,
-                                                 D3D_DRIVER_TYPE_HARDWARE,
-                                                 nullptr,
-                                                 swapCreateFlags,
-                                                 nullptr,
-                                                 0,
-                                                 D3D11_SDK_VERSION,
-                                                 &sd,
-                                                 &pSwap,
-                                                 &pDevice,
-                                                 nullptr,
-                                                 &pContext));
+    GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
+        nullptr,
+        D3D_DRIVER_TYPE_HARDWARE,
+        nullptr,
+        swapCreateFlags,
+        nullptr,
+        0,
+        D3D11_SDK_VERSION,
+        &sd,
+        &pSwap,
+        &pDevice,
+        nullptr,
+        &pContext));
 
     WRL::ComPtr<ID3D11Resource> pBackBuffer{};
     GFX_THROW_INFO(pSwap->GetBuffer(0u, __uuidof(ID3D11Resource), &pBackBuffer));

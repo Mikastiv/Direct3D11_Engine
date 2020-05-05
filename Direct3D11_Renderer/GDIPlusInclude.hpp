@@ -7,7 +7,7 @@
 #include <algorithm>
 namespace Gdiplus
 {
-    using std::min;
     using std::max;
+    using std::min;
 }
 #include <gdiplus.h>

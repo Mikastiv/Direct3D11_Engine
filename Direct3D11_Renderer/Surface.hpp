@@ -33,7 +33,7 @@ public:
     Surface(Surface&& other) noexcept;
     ~Surface() = default;
     auto operator=(const Surface& rhs) noexcept(!IS_DEBUG) -> Surface&;
-    auto operator=(Surface && rhs) noexcept -> Surface&;
+    auto operator=(Surface&& rhs) noexcept -> Surface&;
     auto Clear(Color fill) noexcept -> void;
     auto PutPixel(unsigned int x, unsigned int y, Color c) noexcept(!IS_DEBUG) -> void;
     auto GetPixel(unsigned int x, unsigned int y) const noexcept(!IS_DEBUG) -> Color;
@@ -51,5 +51,4 @@ private:
     std::unique_ptr<Color[]> pBuffer{};
     unsigned int height = 0u;
     unsigned int width = 0u;
-
 };
