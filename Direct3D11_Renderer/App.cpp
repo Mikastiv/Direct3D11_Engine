@@ -52,7 +52,7 @@ auto App::DoFrame() -> void
     const float deltaTime = ft.Mark() * speedFactor;
     gfx.BeginFrame(0.0f, 0.0f, 0.0f);
     gfx.SetCameraView(camera.GetViewMatrix());
-    light.Bind(gfx);
+    light.Bind(gfx, camera.GetViewMatrix());
 
     for (auto& d : drawables)
     {

@@ -11,14 +11,13 @@ public:
     auto ShowControlWindow() noexcept -> void;
     auto Reset() noexcept -> void;
     auto Draw(Graphics& gfx) const noexcept(!IS_DEBUG) -> void;
-    auto Bind(Graphics& gfx) const noexcept -> void;
+    auto Bind(Graphics& gfx, DirectX::FXMMATRIX view) const noexcept -> void;
 
 private:
     struct PointLightCBuf
     {
-        DirectX::XMFLOAT3A pos;
-        DirectX::XMFLOAT3A ambient;
-        DirectX::XMFLOAT3 diffuseColor;
+        DirectX::XMFLOAT3 pos;
+        float ambient;
         float diffuseIntensity;
         float attConst;
         float attLinear;

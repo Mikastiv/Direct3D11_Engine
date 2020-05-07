@@ -19,8 +19,7 @@ auto PointLight::ShowControlWindow() noexcept -> void
 
         ImGui::Text("Intensity/Color");
         ImGui::SliderFloat("Intensity", &cbData.diffuseIntensity, 0.01f, 2.0f, "%.2f", 2);
-        ImGui::ColorEdit3("Diffuse Color", &cbData.diffuseColor.x);
-        ImGui::ColorEdit3("Ambient", &cbData.ambient.x);
+        ImGui::SliderFloat("Ambient", &cbData.ambient, 0.0f, 1.0f, "%.2f");
 
         ImGui::Text("Falloff");
         ImGui::SliderFloat("Constant", &cbData.attConst, 0.05f, 10.0f, "%.2f", 4);
@@ -39,8 +38,7 @@ auto PointLight::Reset() noexcept -> void
 {
     cbData = {
         { 0.0f, 0.0f, 0.0f },
-        { 0.05f, 0.05f, 0.05f },
-        { 1.0f, 1.0f, 1.0f },
+        0.05f,
         1.0f,
         1.0f,
         0.045f,
@@ -54,8 +52,11 @@ auto PointLight::Draw(Graphics& gfx) const noexcept(!IS_DEBUG) -> void
     mesh.Draw(gfx);
 }
 
-auto PointLight::Bind(Graphics& gfx) const noexcept -> void
+auto PointLight::Bind(Graphics& gfx, DirectX::FXMMATRIX view) const noexcept -> void
 {
-    cbuf.Update(gfx, cbData);
+    auto dataCopy = cbData;
+    const auto pos = DirectX::XMLoadFloat3(&cbData.pos);
+    DirectX::XMStoreFloat3(&dataCopy.pos, DirectX::XMVector3Transform(pos, view));
+    cbuf.Update(gfx, dataCopy);
     cbuf.Bind(gfx);
 }
