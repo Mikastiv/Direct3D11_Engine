@@ -20,8 +20,10 @@ App::App()
     std::uniform_real_distribution<float> dYRotDist(0.01f, DirectX::XM_PIDIV4 / 2.0f);
     std::uniform_real_distribution<float> modelRotDist(0.1f, DirectX::XM_PIDIV2);
     std::uniform_int_distribution<int> typeDist(0, 1);
+    std::uniform_real_distribution<float> matColorDist(0.0f, 1.0f);
 
     const auto GenerateTestObjects = [&]() -> std::unique_ptr<Drawable> {
+        const DirectX::XMFLOAT3 color = { matColorDist(rng), matColorDist(rng), matColorDist(rng) };
         switch (typeDist(rng))
         {
         default:
@@ -34,7 +36,8 @@ App::App()
                 dYRotDist,
                 modelRotDist,
                 modelRotDist,
-                modelRotDist);
+                modelRotDist,
+                color);
         }
     };
 

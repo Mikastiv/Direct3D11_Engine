@@ -12,7 +12,16 @@ Globe::Globe(
     std::uniform_real_distribution<float>& dPitchDist,
     std::uniform_real_distribution<float>& dYawDist,
     std::uniform_real_distribution<float>& dRollDist)
-    : TestObject(rng, radiusDist, yRotOffsetDist, rotOffsetDist, dYRotationDist, dPitchDist, dYawDist, dRollDist)
+    : TestObject(
+          rng,
+          radiusDist,
+          yRotOffsetDist,
+          rotOffsetDist,
+          dYRotationDist,
+          dPitchDist,
+          dYawDist,
+          dRollDist,
+          { 1.0f, 1.0f, 1.0f })
 {
     struct Vertex
     {

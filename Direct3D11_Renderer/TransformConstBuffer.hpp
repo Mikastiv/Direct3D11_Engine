@@ -15,7 +15,7 @@ private:
     };
 
 public:
-    TransformConstBuffer(Graphics& gfx, const Drawable& parent);
+    TransformConstBuffer(Graphics& gfx, const Drawable& parent, UINT slot = 0u);
     auto Bind(Graphics& gfx) noexcept -> void override;
 
 private:

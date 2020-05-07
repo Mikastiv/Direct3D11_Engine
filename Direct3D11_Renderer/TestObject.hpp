@@ -16,7 +16,8 @@ public:
         std::uniform_real_distribution<float>& dYRotationDist,
         std::uniform_real_distribution<float>& dPitchDist,
         std::uniform_real_distribution<float>& dYawDist,
-        std::uniform_real_distribution<float>& dRollDist)
+        std::uniform_real_distribution<float>& dRollDist,
+        DirectX::XMFLOAT3 materialColor)
         : rotationRadius(radiusDist(rng))
         , rotationOffset(rotOffsetDist(rng))
         , yRotation(yRotOffsetDist(rng))
@@ -24,6 +25,7 @@ public:
         , dPitch(dPitchDist(rng))
         , dYaw(dYawDist(rng))
         , dRoll(dRollDist(rng))
+        , materialColor(materialColor)
     {
     }
     auto Update(float deltaTime) noexcept -> void override
@@ -52,4 +54,6 @@ private:
     float dPitch = 0.0f;
     float dYaw = 0.0f;
     float dRoll = 0.0f;
+
+    DirectX::XMFLOAT3 materialColor = { 1.0f, 1.0f, 1.0f };
 };

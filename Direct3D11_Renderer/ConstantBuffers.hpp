@@ -7,7 +7,8 @@ template <typename T>
 class ConstantBuffer : public Bindable
 {
 public:
-    explicit ConstantBuffer(Graphics& gfx)
+    ConstantBuffer(Graphics& gfx, UINT slot = 0u)
+        : slot(slot)
     {
         INFOMAN(gfx);
 
@@ -21,7 +22,8 @@ public:
 
         GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&desc, nullptr, &pConstantBuffer));
     }
-    ConstantBuffer(Graphics& gfx, const T& bufferData)
+    ConstantBuffer(Graphics& gfx, const T& bufferData, UINT slot = 0u)
+        : slot(slot)
     {
         INFOMAN(gfx);
 
@@ -50,23 +52,24 @@ public:
 
 protected:
     Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer{};
+    UINT slot = 0;
 };
 
 template <typename T>
 class VertexConstantBuffer : public ConstantBuffer<T>
 {
 public:
-    explicit VertexConstantBuffer(Graphics& gfx)
-        : ConstantBuffer<T>(gfx)
+    VertexConstantBuffer(Graphics& gfx, UINT slot = 0u)
+        : ConstantBuffer<T>(gfx, slot)
     {
     }
-    VertexConstantBuffer(Graphics& gfx, const T& bufferData)
-        : ConstantBuffer<T>(gfx, bufferData)
+    VertexConstantBuffer(Graphics& gfx, const T& bufferData, UINT slot = 0u)
+        : ConstantBuffer<T>(gfx, bufferData, slot)
     {
     }
     auto Bind(Graphics& gfx) noexcept -> void override
     {
-        Bindable::GetContext(gfx)->VSSetConstantBuffers(0u, 1u, this->pConstantBuffer.GetAddressOf());
+        Bindable::GetContext(gfx)->VSSetConstantBuffers(this->slot, 1u, this->pConstantBuffer.GetAddressOf());
     }
 };
 
@@ -74,16 +77,16 @@ template <typename T>
 class PixelConstantBuffer : public ConstantBuffer<T>
 {
 public:
-    explicit PixelConstantBuffer(Graphics& gfx)
-        : ConstantBuffer<T>(gfx)
+    explicit PixelConstantBuffer(Graphics& gfx, UINT slot = 0u)
+        : ConstantBuffer<T>(gfx, slot)
     {
     }
-    PixelConstantBuffer(Graphics& gfx, const T& bufferData)
-        : ConstantBuffer<T>(gfx, bufferData)
+    PixelConstantBuffer(Graphics& gfx, const T& bufferData, UINT slot = 0u)
+        : ConstantBuffer<T>(gfx, bufferData, slot)
     {
     }
     auto Bind(Graphics& gfx) noexcept -> void override
     {
-        Bindable::GetContext(gfx)->PSSetConstantBuffers(0u, 1u, this->pConstantBuffer.GetAddressOf());
+        Bindable::GetContext(gfx)->PSSetConstantBuffers(this->slot, 1u, this->pConstantBuffer.GetAddressOf());
     }
 };

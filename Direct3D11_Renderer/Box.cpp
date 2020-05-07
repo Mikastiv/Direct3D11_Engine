@@ -11,8 +11,10 @@ Box::Box(
     std::uniform_real_distribution<float>& dYRotationDist,
     std::uniform_real_distribution<float>& dPitchDist,
     std::uniform_real_distribution<float>& dYawDist,
-    std::uniform_real_distribution<float>& dRollDist)
-    : TestObject(rng, radiusDist, yRotOffsetDist, rotOffsetDist, dYRotationDist, dPitchDist, dYawDist, dRollDist)
+    std::uniform_real_distribution<float>& dRollDist,
+    DirectX::XMFLOAT3 materialColor)
+    : TestObject(
+          rng, radiusDist, yRotOffsetDist, rotOffsetDist, dYRotationDist, dPitchDist, dYawDist, dRollDist, materialColor)
 {
     struct Vertex
     {
@@ -60,4 +62,11 @@ Box::Box(
     }
 
     AddBind(std::make_unique<TransformConstBuffer>(gfx, *this));
+
+    struct PSMaterialConstant
+    {
+        DirectX::XMFLOAT3A color;
+    } colorConst;
+    colorConst.color = { materialColor.x, materialColor.y, materialColor.z };
+    AddBind(std::make_unique<PixelConstantBuffer<PSMaterialConstant>>(gfx, colorConst, 1u));
 }

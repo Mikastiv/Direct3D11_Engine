@@ -17,7 +17,6 @@ private:
     struct PointLightCBuf
     {
         DirectX::XMFLOAT3A pos;
-        DirectX::XMFLOAT3A materialColor;
         DirectX::XMFLOAT3A ambient;
         DirectX::XMFLOAT3 diffuseColor;
         float diffuseIntensity;
