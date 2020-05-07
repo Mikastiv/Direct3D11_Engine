@@ -10,12 +10,9 @@ GDIPlusManager gdiManager;
 
 App::App()
     : wnd(Graphics::ScreenWidth, Graphics::ScreenHeight, windowTitle)
+    , gfx(wnd.GetHWND())
+    , light(gfx)
 {
-    if (!wnd.HasGfx())
-    {
-        wnd.CreateGfx();
-    }
-
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<float> radiusDist(5.0f, 20.0f);
     std::uniform_real_distribution<float> yRotDist(0.0f, DirectX::XM_2PI);
@@ -29,7 +26,7 @@ App::App()
         {
         default:
             return std::make_unique<Box>(
-                wnd.GetGfx(),
+                gfx,
                 rng,
                 radiusDist,
                 yRotDist,
@@ -44,24 +41,22 @@ App::App()
     std::generate_n(std::back_inserter(drawables), nDrawables, GenerateTestObjects);
 
     const auto ar = (float)Graphics::ScreenHeight / (float)Graphics::ScreenWidth;
-    wnd.GetGfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 60.0f));
+    gfx.SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, ar, 0.5f, 60.0f));
 }
 
 auto App::DoFrame() -> void
 {
     const float deltaTime = ft.Mark() * speedFactor;
-    wnd.GetGfx().BeginFrame(0.0f, 0.0f, 0.0f);
-    wnd.GetGfx().SetCameraView(camera.GetViewMatrix());
-    PointLight light(wnd.GetGfx());
-    light.SetPos(lightPos);
-    light.Bind(wnd.GetGfx());
+    gfx.BeginFrame(0.0f, 0.0f, 0.0f);
+    gfx.SetCameraView(camera.GetViewMatrix());
+    light.Bind(gfx);
 
     for (auto& d : drawables)
     {
         d->Update(deltaTime);
-        d->Draw(wnd.GetGfx());
+        d->Draw(gfx);
     }
-    light.Draw(wnd.GetGfx());
+    light.Draw(gfx);
 
     if (showDemoWindow)
     {
@@ -79,9 +74,8 @@ auto App::DoFrame() -> void
 
     camera.ShowControlWindow();
     light.ShowControlWindow();
-    lightPos = light.GetPos();
 
-    wnd.GetGfx().EndFrame();
+    gfx.EndFrame();
 }
 
 auto App::Start() -> int

@@ -30,8 +30,9 @@ private:
     float speedFactor = 1.0f;
     ImGuiManager imgui{};
     Window wnd;
+    Graphics gfx;
+    PointLight light;
     Timer ft{};
     Camera camera{};
-    DirectX::XMFLOAT3 lightPos{};
     std::vector<std::unique_ptr<Drawable>> drawables{};
 };

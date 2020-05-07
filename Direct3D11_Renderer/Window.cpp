@@ -89,23 +89,9 @@ auto Window::SetTitle(const std::wstring& title) -> void
     }
 }
 
-auto Window::CreateGfx() -> void
+auto Window::GetHWND() const -> HWND
 {
-    pGfx = std::make_unique<Graphics>(hWnd);
-}
-
-auto Window::HasGfx() const -> bool
-{
-    return !!pGfx;
-}
-
-auto Window::GetGfx() -> Graphics&
-{
-    if (!pGfx)
-    {
-        throw MKWND_NOGFX_EXCEPT();
-    }
-    return *pGfx;
+    return hWnd;
 }
 
 auto WINAPI Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept -> LRESULT
@@ -407,12 +393,12 @@ auto Window::Exception::GetErrorDescription() const noexcept -> std::string
     return translate_error_code(hr);
 }
 
-Window::NoGfxException::NoGfxException(int line, const char* file) noexcept
-    : MikastivException(line, file)
-{
-}
-
-auto Window::NoGfxException::GetType() const noexcept -> const char*
-{
-    return "Chili Window Exception [No Graphics]";
-}
+//Window::NoGfxException::NoGfxException(int line, const char* file) noexcept
+//    : MikastivException(line, file)
+//{
+//}
+//
+//auto Window::NoGfxException::GetType() const noexcept -> const char*
+//{
+//    return "Chili Window Exception [No Graphics]";
+//}

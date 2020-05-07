@@ -12,18 +12,22 @@ public:
     auto Reset() noexcept -> void;
     auto Draw(Graphics& gfx) const noexcept(!IS_DEBUG) -> void;
     auto Bind(Graphics& gfx) const noexcept -> void;
-    auto SetPos(DirectX::XMFLOAT3 pos) -> void;
-    auto GetPos() const -> DirectX::XMFLOAT3;
 
 private:
     struct PointLightCBuf
     {
-        DirectX::XMFLOAT3 pos;
-        float padding;
+        DirectX::XMFLOAT3A pos;
+        DirectX::XMFLOAT3A materialColor;
+        DirectX::XMFLOAT3A ambient;
+        DirectX::XMFLOAT3 diffuseColor;
+        float diffuseIntensity;
+        float attConst;
+        float attLinear;
+        float attQuad;
     };
 
 private:
-    DirectX::XMFLOAT3 pos = { 0.0f, 0.0f, 0.0f };
+    PointLightCBuf cbData;
     mutable SolidSphere mesh;
     mutable PixelConstantBuffer<PointLightCBuf> cbuf;
 };

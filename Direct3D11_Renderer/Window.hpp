@@ -53,12 +53,12 @@ public:
         HRESULT hr{};
     };
 
-    class NoGfxException : public MikastivException
-    {
-    public:
-        NoGfxException(int line, const char* file) noexcept;
-        auto GetType() const noexcept -> const char* override;
-    };
+    //class NoGfxException : public MikastivException
+    //{
+    //public:
+    //    NoGfxException(int line, const char* file) noexcept;
+    //    auto GetType() const noexcept -> const char* override;
+    //};
 
 public:
     Keyboard kbd{};
@@ -76,9 +76,7 @@ public:
     auto operator=(const Window&) -> Window& = delete;
     auto operator=(Window &&) -> Window& = delete;
     auto SetTitle(const std::wstring& title) -> void;
-    auto CreateGfx() -> void;
-    auto HasGfx() const -> bool;
-    auto GetGfx() -> Graphics&;
+    auto GetHWND() const -> HWND;
 
 private:
     static auto CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept -> LRESULT;
