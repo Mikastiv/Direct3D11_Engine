@@ -393,12 +393,12 @@ auto Window::Exception::GetErrorDescription() const noexcept -> std::string
     return translate_error_code(hr);
 }
 
-//Window::NoGfxException::NoGfxException(int line, const char* file) noexcept
+// Window::NoGfxException::NoGfxException(int line, const char* file) noexcept
 //    : MikastivException(line, file)
 //{
 //}
 //
-//auto Window::NoGfxException::GetType() const noexcept -> const char*
+// auto Window::NoGfxException::GetType() const noexcept -> const char*
 //{
 //    return "Chili Window Exception [No Graphics]";
 //}

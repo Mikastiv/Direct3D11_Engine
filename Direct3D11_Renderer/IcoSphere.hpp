@@ -130,19 +130,19 @@ public:
             std::vector<uint16_t> indices2{};
             for (uint16_t j = 0; j < (uint16_t)indices.size(); j += 3)
             {
-                uint16_t a = GetMiddlePoint(indices[j], indices[j + 1]);
-                uint16_t b = GetMiddlePoint(indices[j + 1], indices[j + 2]);
-                uint16_t c = GetMiddlePoint(indices[j + 2], indices[j]);
+                uint16_t a = GetMiddlePoint(indices[j], indices[(size_t)j + 1]);
+                uint16_t b = GetMiddlePoint(indices[(size_t)j + 1], indices[(size_t)j + 2]);
+                uint16_t c = GetMiddlePoint(indices[(size_t)j + 2], indices[j]);
 
                 indices2.push_back(indices[j]);
                 indices2.push_back(a);
                 indices2.push_back(c);
 
-                indices2.push_back(indices[j + 1]);
+                indices2.push_back(indices[(size_t)j + 1]);
                 indices2.push_back(b);
                 indices2.push_back(a);
 
-                indices2.push_back(indices[j + 2]);
+                indices2.push_back(indices[(size_t)j + 2]);
                 indices2.push_back(c);
                 indices2.push_back(b);
 
